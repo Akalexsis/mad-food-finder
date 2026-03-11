@@ -3,7 +3,6 @@
   Purpose - Render each screen and display navigation bar
  */
 import 'package:flutter/material.dart';
-import 'screens/detailScreen.dart';
 import 'screens/foodScreen.dart';
 
 void main() {
@@ -20,7 +19,7 @@ class FoodFinderApp extends StatelessWidget {
     return MaterialApp(
       title: 'Food Finder',
       home: DefaultTabController(
-        length: 2, // UPDATE TO 4
+        length: 1, // UPDATE TO 4
         child: Scaffold(
           appBar: AppBar(
             bottom: const TabBar(
@@ -35,7 +34,6 @@ class FoodFinderApp extends StatelessWidget {
           body: const TabBarView(
             children: [
               FoodScreen(),
-              DetailScreen(),
             ],
           )
         )

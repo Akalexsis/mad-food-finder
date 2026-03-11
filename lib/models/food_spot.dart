@@ -6,7 +6,7 @@ class FoodSpot {
   final int id;
   final String name;
   final String imageUrl;
-  final int hours;
+  final String hours;
   final int cost;
   final String cuisine;
 
