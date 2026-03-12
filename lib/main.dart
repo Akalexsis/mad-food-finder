@@ -29,7 +29,7 @@ class FoodFinderApp extends StatelessWidget {
             bottom: const TabBar(
               tabs: [
                 Tab(text: "Home"),
-                Tab(text: "Meals"),
+                // Tab(text: "Meals"),
                 // Tab(text: "Budget"),
                 // Tab(text: "Profile"),
               ],

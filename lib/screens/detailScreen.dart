@@ -18,8 +18,15 @@ class DetailScreen extends StatefulWidget {
 // TO-DO - refactor code to accept database objects
 class _DetailScreenState extends State<DetailScreen> {
   // accept information from food spot
-  // final FoodSpot spot;
+  late final FoodSpot spot;
   String reviews = '';
+
+  // initialize food spot data
+  @override
+  void initState() {
+    super.initState();
+    spot = widget.spot;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +37,12 @@ class _DetailScreenState extends State<DetailScreen> {
             Center( // Display the image, cost, and cuisine type as headers
               child: Column(
                 children: [
-                  Image.network(widget.spot.imageUrl, height: 150, width: double.infinity),
-                  Text(widget.spot.name, style: TextStyle( fontSize: 24, fontWeight: FontWeight.w500)),
+                  Image.network(spot.imageUrl, height: 150, width: double.infinity),
+                  Text(spot.name, style: TextStyle( fontSize: 24, fontWeight: FontWeight.w500)),
                   Row(
                     children: [ 
-                      Text(widget.spot.hours, style: TextStyle( fontSize: 18, color: Colors.blueGrey)),
-                      Text(widget.spot.cuisine, style: TextStyle( fontSize: 18, color: Colors.blueGrey)),
+                      Text(spot.hours, style: TextStyle( fontSize: 18, color: Colors.blueGrey)),
+                      Text(spot.cuisine, style: TextStyle( fontSize: 18, color: Colors.blueGrey)),
                   ],)
                 ],
               )

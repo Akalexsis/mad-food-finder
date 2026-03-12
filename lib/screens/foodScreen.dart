@@ -26,8 +26,8 @@ class _FoodScreenState extends State<FoodScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: 
-      // add filters here
       Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           // FILTERS
           Row(
@@ -41,37 +41,40 @@ class _FoodScreenState extends State<FoodScreen> {
             ],
           ),
 
-          // Render each food spot as a clickable card
-          ListView.builder( 
-          itemCount: sampleSpots.length,
-          itemBuilder: (context, index) {
-          final spot = sampleSpots[index];
+          // Render each food spot as a clickable card 
+          Expanded(
+            child: ListView.builder(
+              itemCount: sampleSpots.length,
+              itemBuilder: (context, index) {
+                final spot = sampleSpots[index];
 
-          return Card(
-            child: 
-                ListTile(
-                  title: Image.network(spot.imageUrl, height: 100, width: double.infinity),
-                  subtitle: Column( // vertically list all spot details
-                    children: [
-                      Text(spot.name, style: TextStyle( fontSize: 24 ), textAlign: TextAlign.start ),
-                      Text(spot.hours, style: TextStyle( color: Colors.blueGrey ), textAlign: TextAlign.start),
-                      Text('\$${spot.cost}', style: TextStyle( color: Colors.lightGreen ), textAlign: TextAlign.start)
-                    ],
-                  ),
-                  isThreeLine: true,
-                  trailing: ElevatedButton(
-                    onPressed: () { _updateFavorite(); }, 
-                    child: spot.isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border)),
-                  onTap: () { // navigate to details screen when card tapped
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute( builder: (context) => DetailScreen(spot: spot) )
-                    );
-                  }
-                )
-            );
-          }
-        )
+                return Card(
+                  child: ListTile(
+                    title: Image.network(spot.imageUrl, height: 100, width: double.infinity),
+                    subtitle: Column( // vertically list all spot details
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(spot.name, style: TextStyle( fontSize: 24 )),
+                        Text(spot.hours, style: TextStyle( color: Colors.blueGrey )),
+                        Text('\$${spot.cost}', style: TextStyle( color: Colors.lightGreen ))
+                      ],
+                    ),
+                    isThreeLine: true,
+                    trailing: ElevatedButton(
+                      onPressed: () { _updateFavorite(); }, 
+                      child: spot.isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border)
+                    ),
+                    onTap: () { // navigate to details screen when card tapped
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute( builder: (context) => DetailScreen(spot: spot) )
+                      );
+                    }
+                  )
+                );
+              }
+            )
+          )
         ],
       )
     );
