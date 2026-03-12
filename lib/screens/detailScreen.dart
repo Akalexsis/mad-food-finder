@@ -19,19 +19,23 @@ class DetailScreen extends StatefulWidget {
 
 // TO-DO - refactor code to accept database objects
 class _DetailScreenState extends State<DetailScreen> {
-  // accept information from food spot
+  // store info of corresponding food spot with related reviews
   late final FoodSpot spot;
-  // late final List<String, dynamic> reviews;
+  late final List<Review> reviews;
+
 
   // initialize food spot data
   @override
   void initState() {
     super.initState();
     spot = widget.spot;
-    // initialize spot specific reviews
+    // loadReviews();
   }
 
   // get reviews from database
+  // Future<void> loadReviews() async{
+    
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +58,27 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
 
             // Show spot reviews
-            Text('Reviews', style: TextStyle( fontSize: 24, fontWeight: FontWeight.w500)),
-            Text('Add a review!'), // refactor to render list of views
+            Text('Reviews', style: TextStyle( fontSize: 24, fontWeight: FontWeight.w500), textAlign: TextAlign.start,),
+
+            // conditionally render reviews
+            reviews.isEmpty ? Text('Add a review!') : 
+            
+            Expanded(
+              child: ListView.builder(
+                itemCount: reviews.length,
+                itemBuilder: (context, index) {
+                  final review = reviews[index];
+
+                  return ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text(review.name, style: TextStyle( fontSize: 18 )),
+                    subtitle: Text(review.desc, style: TextStyle( fontSize: 14, color: Colors.blueGrey )),
+                    trailing: Text(review.date, style: TextStyle( fontSize: 12, color: Colors.blueGrey )),
+                  );
+                },
+              ),
+            ),
+
             ElevatedButton( // go to review page to add new review
               onPressed: () {
                 Navigator.push(
@@ -63,7 +86,6 @@ class _DetailScreenState extends State<DetailScreen> {
                   MaterialPageRoute(builder: (context) => ReviewScreen())
                 );
                },
-
                child: Text('Add Review')
             ),
           ],

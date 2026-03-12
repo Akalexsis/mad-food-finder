@@ -6,12 +6,14 @@ class Review {
   final int? id;
   final String name;
   final String desc;
+  final String date;
   final int? foodId; 
 
   Review({ 
     this.id, 
     required this.name,
     required this.desc, 
+    required this.date,
     this.foodId, 
   });
 
@@ -21,6 +23,7 @@ class Review {
       'id' : id,
       'name': name,
       'desc': desc,
+      'date': date,
       'foodId': foodId
     };
   }
@@ -31,6 +34,7 @@ class Review {
       id: map['id'],
       name: map['name'], 
       desc: map['desc'], 
+      date: map['date'],
       foodId: map['foodId']
     ); 
   }
@@ -40,11 +44,13 @@ class Review {
     int? id,
     String? name,
     String? desc, 
+    String? date,
     int? foodId} ) {
       return Review(
         id: id ?? this.id,
         name: name ?? this.name, // only update value if there is a new value
         desc: desc ?? this.desc, 
+        date: date ?? this.date,
         foodId: foodId ?? this.foodId
       );
   }

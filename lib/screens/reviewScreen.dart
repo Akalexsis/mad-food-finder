@@ -31,13 +31,16 @@ class _ReviewScreenState extends State<ReviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Add a Review!', textAlign: TextAlign.center,),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+      ),
       body: Center( 
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Add a Review!', style: TextStyle( fontSize: 24 ) ),
-            SizedBox( height: 30 ),
-
-            Text('Review Name', textAlign: TextAlign.start),
+            Text('Review Name'),
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
@@ -46,7 +49,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
             ),
             SizedBox( height: 15 ),
 
-            // Text('Review Name', textAlign: TextAlign.start),
+            Text('Description'),
             TextField(
               controller: _reviewController,
               decoration: InputDecoration(
