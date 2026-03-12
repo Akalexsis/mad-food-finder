@@ -26,7 +26,10 @@ class _DetailScreenState extends State<DetailScreen> {
   void initState() {
     super.initState();
     spot = widget.spot;
+    // initialize spot specific reviews
   }
+
+  // get reviews from database
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +53,10 @@ class _DetailScreenState extends State<DetailScreen> {
 
             // Show spot reviews
             Text('Reviews', style: TextStyle( fontSize: 24, fontWeight: FontWeight.w500)),
-            Text( reviews.isEmpty ? 'Add a review!' : reviews )
+            Text( reviews.isEmpty ? 'Add a review!' : reviews ) // refactor to render list of reviews
+            // ElevatedButton( // go to review page to add new review
+            //   onPressed: () { },
+            // );
           ],
         )
       )

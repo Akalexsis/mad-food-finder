@@ -17,6 +17,8 @@ class FoodScreen extends StatefulWidget {
 class _FoodScreenState extends State<FoodScreen> {
   // add database methods here
 
+  // get entries by filter
+
   void _updateFavorite() {
     // update favoite for food spot
     print('is favorite');

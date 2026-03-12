@@ -13,6 +13,7 @@ class AddFoodScreen extends StatefulWidget {
 }
 
 class _AddFoodScreenState extends State<AddFoodScreen> {
+  // convert to list for code readability
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
   final TextEditingController _hoursController = TextEditingController();
