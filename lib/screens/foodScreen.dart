@@ -2,9 +2,9 @@
   Author - Kayla Thornton
   Purpose - Render list of food spots and route users to Foods screen so they can view more Foods
  */
-
 import 'package:flutter/material.dart';
 import '../screens/detailScreen.dart';
+import '../screens/addFoodScreen.dart';
 import '../data/food_data.dart'; // FOR TESTING ONLY
 
 class FoodScreen extends StatefulWidget {
@@ -25,9 +25,26 @@ class _FoodScreenState extends State<FoodScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder( // iterate through all food spots to render each as a clickable card
-        itemCount: sampleSpots.length,
-        itemBuilder: (context, index) {
+      body: 
+      // add filters here
+      Column(
+        children: [
+          // FILTERS
+          Row(
+            children: [
+              Text('Filters'),
+              // dropdown options by cuisine, favorite, and maybe hours
+              ElevatedButton(
+                onPressed: () { Navigator.push(context, MaterialPageRoute( builder: (context) => AddFoodScreen() )); } , 
+                child: Text('Add Food Spot')
+              )
+            ],
+          ),
+
+          // Render each food spot as a clickable card
+          ListView.builder( 
+          itemCount: sampleSpots.length,
+          itemBuilder: (context, index) {
           final spot = sampleSpots[index];
 
           return Card(
@@ -36,9 +53,9 @@ class _FoodScreenState extends State<FoodScreen> {
                   title: Image.network(spot.imageUrl, height: 100, width: double.infinity),
                   subtitle: Column( // vertically list all spot details
                     children: [
-                      Text(spot.name, style: TextStyle( fontSize: 24)),
-                      Text(spot.hours, style: TextStyle( color: Colors.blueGrey)),
-                      Text('${spot.cost}', style: TextStyle( color: Colors.lightGreen))
+                      Text(spot.name, style: TextStyle( fontSize: 24 ), textAlign: TextAlign.start ),
+                      Text(spot.hours, style: TextStyle( color: Colors.blueGrey ), textAlign: TextAlign.start),
+                      Text('\$${spot.cost}', style: TextStyle( color: Colors.lightGreen ), textAlign: TextAlign.start)
                     ],
                   ),
                   isThreeLine: true,
@@ -53,7 +70,9 @@ class _FoodScreenState extends State<FoodScreen> {
                   }
                 )
             );
-        }
+          }
+        )
+        ],
       )
     );
   }

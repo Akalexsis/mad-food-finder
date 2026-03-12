@@ -35,7 +35,6 @@ class _DetailScreenState extends State<DetailScreen> {
                   Row(
                     children: [ 
                       Text(widget.spot.hours, style: TextStyle( fontSize: 18, color: Colors.blueGrey)),
-                      SizedBox( height: 150 ),
                       Text(widget.spot.cuisine, style: TextStyle( fontSize: 18, color: Colors.blueGrey)),
                   ],)
                 ],
