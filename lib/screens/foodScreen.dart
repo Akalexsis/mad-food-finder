@@ -17,6 +17,11 @@ class FoodScreen extends StatefulWidget {
 class _FoodScreenState extends State<FoodScreen> {
   // add database methods here
 
+  void _updateFavorite() {
+    // update favoite for food spot
+    print('is favorite');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +33,7 @@ class _FoodScreenState extends State<FoodScreen> {
           return Card(
             child: 
                 ListTile(
-                  title: Image.network(spot.imageUrl, width: double.infinity),
+                  title: Image.network(spot.imageUrl, height: 100, width: double.infinity),
                   subtitle: Column( // vertically list all spot details
                     children: [
                       Text(spot.name, style: TextStyle( fontSize: 24)),
@@ -37,7 +42,9 @@ class _FoodScreenState extends State<FoodScreen> {
                     ],
                   ),
                   isThreeLine: true,
-                  trailing: const Icon(Icons.favorite_border),
+                  trailing: ElevatedButton(
+                    onPressed: () { _updateFavorite(); }, 
+                    child: spot.isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border)),
                   onTap: () { // navigate to details screen when card tapped
                     Navigator.push(
                       context,

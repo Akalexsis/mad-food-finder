@@ -12,6 +12,7 @@ final List<FoodSpot> sampleSpots = [
     hours: '9:00am - 12:00pm',
     cost: 25,
     cuisine: 'American',
+    isFavorite: false,
   ),
   FoodSpot(
     id: 2,
@@ -20,6 +21,7 @@ final List<FoodSpot> sampleSpots = [
     hours: '9:00am - 12:00pm',
     cost: 15,
     cuisine: 'American',
+    isFavorite: false,
   ),
   FoodSpot(
     id: 3,
@@ -28,6 +30,7 @@ final List<FoodSpot> sampleSpots = [
     hours: '9:00am - 5:00pm',
     cost: 25,
     cuisine: 'American',
+    isFavorite: false,
   ),
   FoodSpot(
     id: 4,
@@ -36,6 +39,7 @@ final List<FoodSpot> sampleSpots = [
     hours: '9:00am - 5:00pm',
     cost: 30,
     cuisine: 'American',
+    isFavorite: false,
   ),
   FoodSpot(
     id: 5,
@@ -44,5 +48,6 @@ final List<FoodSpot> sampleSpots = [
     hours: '9:00am - 5:00pm',
     cost: 15,
     cuisine: 'American',
+    isFavorite: false,
   ),
 ];
