@@ -18,10 +18,14 @@ class FoodFinderApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Food Finder',
+      debugShowCheckedModeBanner: false,
       home: DefaultTabController(
         length: 1, // UPDATE TO 4
         child: Scaffold(
           appBar: AppBar(
+            title: Text('Food Finder', textAlign: TextAlign.center,),
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
             bottom: const TabBar(
               tabs: [
                 Tab(text: "Home"),

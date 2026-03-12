@@ -20,21 +20,15 @@ class _FoodScreenState extends State<FoodScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Food Finder'),
-        backgroundColor: Colors.green,
-      ),
       body: ListView.builder( // iterate through all food spots to render each as a clickable card
         itemCount: sampleSpots.length,
         itemBuilder: (context, index) {
           final spot = sampleSpots[index];
 
           return Card(
-            shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(10.0) ),
-            child: Column(
-              children: [
+            child: 
                 ListTile(
-                  title: Image.network(spot.imageUrl),
+                  title: Image.network(spot.imageUrl, width: double.infinity),
                   subtitle: Column( // vertically list all spot details
                     children: [
                       Text(spot.name, style: TextStyle( fontSize: 24)),
@@ -50,10 +44,8 @@ class _FoodScreenState extends State<FoodScreen> {
                       MaterialPageRoute( builder: (context) => DetailScreen(spot: spot) )
                     );
                   }
-                  )
-                ]
-              )
-          );
+                )
+            );
         }
       )
     );
