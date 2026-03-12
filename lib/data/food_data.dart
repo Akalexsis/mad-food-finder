@@ -2,7 +2,7 @@
   Author - Kayla Thornton
   Purpose - Use sample food spots to test UI functionality (will replace with SQL queries)
  */
-import '../models/food_spot.dart';
+import '../models/food_model.dart';
 
 final List<FoodSpot> sampleSpots = [
   FoodSpot(

@@ -3,6 +3,7 @@
   Purpose - Provide users with form to add new review
  */
 import 'package:flutter/material.dart';
+import '../models/review_model.dart';
 
 class ReviewScreen extends StatefulWidget {
   const ReviewScreen({super.key});

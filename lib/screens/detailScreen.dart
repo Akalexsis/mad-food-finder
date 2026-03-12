@@ -3,7 +3,9 @@
   Purpose - Render details about food spots
 */
 import 'package:flutter/material.dart';
-import '../models/food_spot.dart';
+import '../models/food_model.dart';
+import '../models/review_model.dart';
+import '../screens/reviewScreen.dart';
 
 class DetailScreen extends StatefulWidget {
   // accept and save food spot
@@ -19,7 +21,7 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   // accept information from food spot
   late final FoodSpot spot;
-  String reviews = '';
+  // late final List<String, dynamic> reviews;
 
   // initialize food spot data
   @override
@@ -53,10 +55,17 @@ class _DetailScreenState extends State<DetailScreen> {
 
             // Show spot reviews
             Text('Reviews', style: TextStyle( fontSize: 24, fontWeight: FontWeight.w500)),
-            Text( reviews.isEmpty ? 'Add a review!' : reviews ) // refactor to render list of reviews
-            // ElevatedButton( // go to review page to add new review
-            //   onPressed: () { },
-            // );
+            Text('Add a review!'), // refactor to render list of views
+            ElevatedButton( // go to review page to add new review
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ReviewScreen())
+                );
+               },
+
+               child: Text('Add Review')
+            ),
           ],
         )
       )
