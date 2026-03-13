@@ -7,7 +7,7 @@ class MealModel {
   final int? id;
   final String name;
   final String desc;
-  final DateTime date;
+  final String date;
 
   const MealModel({
     this.id,
@@ -41,7 +41,7 @@ class MealModel {
     int? id,
     String? name,
     String? desc,
-    DateTime? date
+    String? date
   }) {
     return MealModel(
       id : id ?? this.id,

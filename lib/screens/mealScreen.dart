@@ -4,6 +4,7 @@
  */
 import 'package:flutter/material.dart';
 import '../models/meal_model.dart';
+import '../data/meal_data.dart';
 
 class MealScreen extends StatefulWidget {
   const MealScreen({super.key});
@@ -33,7 +34,25 @@ class _MealScreenState extends State<MealScreen> {
         foregroundColor: Colors.white,
       ),
       body: Column(
-        children: [],
+        children: [
+            // conditionally render meal logs TO-DO - CHANGE SAMPLE LOGS TO LIST OF MEAL LOGS
+            sampleLogs.isEmpty ? Text('No logs for this time') : 
+            
+            Expanded( // render each log with it's name, desc, and date
+              child: ListView.builder(
+                itemCount: sampleLogs.length,
+                itemBuilder: (context, index) {
+                  final log = sampleLogs[index];
+
+                  return ListTile(
+                    title: Text(log.name, style: TextStyle( fontSize: 18 )),
+                    subtitle: Text(log.desc, style: TextStyle( fontSize: 14, color: Colors.blueGrey )),
+                    trailing: Text(log.date, style: TextStyle( fontSize: 12, color: Colors.blueGrey )),
+                  );
+                },
+              ),
+            ),
+        ],
       )
     );
   }
