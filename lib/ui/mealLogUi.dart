@@ -8,24 +8,31 @@ import '../models/meal_model.dart';
 
 class MealLogUi extends StatelessWidget {
   final List<MealModel> mealLogs;
-  const MealLogUi({super.key, required this.mealLogs});
+  final String header;
+  const MealLogUi({super.key, required this.mealLogs, required this.header});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: 
-      ListView.builder( // render each log with its name, desc, and date
-        itemCount: mealLogs.length,
-        itemBuilder: (context, index) {
-        final log = mealLogs[index]; // log at current index
+    return Column(
+      children: [
+        Text(header, style: TextStyle( fontSize: 18 ), textAlign: TextAlign.start),
+        
+        ListView.builder(
+          itemCount: mealLogs.length,
+          shrinkWrap: true, // only take up as much space as needed
+          physics: const NeverScrollableScrollPhysics(), // disable scrolling
+          
+          itemBuilder: (context, index) {
+          final log = mealLogs[index];
 
           return ListTile(
-            title: Text(log.name, style: TextStyle( fontSize: 18 )),
-            subtitle: Text(log.desc, style: TextStyle( fontSize: 14, color: Colors.blueGrey )),
-            trailing: Text(log.date, style: TextStyle( fontSize: 12, color: Colors.blueGrey )),
-          );
-        },
-      ),
-    );
+              title: Text(log.name, style: TextStyle( fontSize: 18 )),
+              subtitle: Text(log.date, style: TextStyle( fontSize: 12, color: Colors.blueGrey )) ,
+              trailing: Text('\$${log.cost}', style: TextStyle( fontSize: 14, color: Colors.lightGreen )),
+              );
+            },
+          ),
+        ]
+      );
   }
 }
