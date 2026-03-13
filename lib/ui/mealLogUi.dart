@@ -4,7 +4,6 @@
  */
 import 'package:flutter/material.dart';
 import '../models/meal_model.dart';
-import '../screens/Meal/mealDetailsScreen.dart';
 import '../screens/Meals/mealDetailsScreen.dart';
 
 class MealLogUi extends StatelessWidget {
