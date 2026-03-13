@@ -3,6 +3,7 @@
  * Purpose - form for users to fill out to create a new meal log
  */
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 
 class AddLogScreen extends StatefulWidget {
@@ -96,6 +97,10 @@ class _AddLogScreenState extends State<AddLogScreen> {
         Text('Cost', style: TextStyle( fontSize: 18 ), textAlign: TextAlign.start),
         TextField(
           controller: _costController,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'[\d\.]')) // allow decimal values
+          ],
+          keyboardType: TextInputType.numberWithOptions( decimal: true ), // accept double int values from users
           decoration: InputDecoration(
             labelText: 'I spent ...'
           ),

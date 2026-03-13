@@ -6,7 +6,7 @@
 class MealModel {
   final int? id;
   final String name;
-  final int cost;
+  final double cost;
   final String desc;
   final String date;
 
@@ -44,7 +44,7 @@ class MealModel {
   MealModel copyWith({
     int? id,
     String? name,
-    int? cost,
+    double? cost,
     String? desc,
     String? date
   }) {
