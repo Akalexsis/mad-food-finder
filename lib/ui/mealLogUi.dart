@@ -2,9 +2,9 @@
   Author - Kayla Thornton
   Purpose - Make reusable UI component to render logs based on date
  */
-
 import 'package:flutter/material.dart';
 import '../models/meal_model.dart';
+import '../screens/mealDetailsScreen.dart';
 
 class MealLogUi extends StatelessWidget {
   final List<MealModel> mealLogs;
@@ -29,6 +29,12 @@ class MealLogUi extends StatelessWidget {
               title: Text(log.name, style: TextStyle( fontSize: 18 )),
               subtitle: Text(log.date, style: TextStyle( fontSize: 12, color: Colors.blueGrey )) ,
               trailing: Text('\$${log.cost}', style: TextStyle( fontSize: 14, color: Colors.lightGreen )),
+              onTap: () {
+                Navigator.push( 
+                  context, 
+                  MaterialPageRoute(builder: (context) => MealDetailScreen(log: log)) // navigate to log specific details screen
+                );
+              },
               );
             },
           ),

@@ -14,6 +14,7 @@ class MealScreen extends StatefulWidget {
   @override
   _MealScreenState createState() => _MealScreenState();
 }
+
 class _MealScreenState extends State<MealScreen> {
   // TO-DO store meals by week, month, and all past
   late final List<MealModel> weekLogs;
@@ -54,7 +55,7 @@ class _MealScreenState extends State<MealScreen> {
 
             // TO-DO - GET ALL LOGS FROM THIS MONTH if no logs, display 'no tracked logs' message
             sampleLogs.isEmpty ? Text('No logs tracked for this month') : MealLogUi(mealLogs: sampleLogs, header: 'This Month'),
-            
+
             // TO-DO - GET ALL PAST LOGS if no logs, display 'no tracked logs' message
             sampleLogs.isEmpty ? Text('No past logs tracked') : MealLogUi(mealLogs: sampleLogs, header: 'All Past'),
 
