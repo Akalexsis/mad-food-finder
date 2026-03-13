@@ -6,12 +6,14 @@
 class MealModel {
   final int? id;
   final String name;
+  final int cost;
   final String desc;
   final String date;
 
   const MealModel({
     this.id,
     required this.name,
+    required this.cost,
     required this.desc,
     required this.date
   });
@@ -21,6 +23,7 @@ class MealModel {
     return {
       'id': id,
       'name': name,
+      'cost': cost,
       'desc': desc,
       'date': date
     };
@@ -31,6 +34,7 @@ class MealModel {
     return MealModel(
     id : map['id'],
     name : map['name'],
+    cost: map['cost'],
     desc : map['desc'],
     date : map['date']
     );
@@ -40,12 +44,14 @@ class MealModel {
   MealModel copyWith({
     int? id,
     String? name,
+    int? cost,
     String? desc,
     String? date
   }) {
     return MealModel(
       id : id ?? this.id,
       name : name ?? this.name,
+      cost: cost ?? this.cost,
       desc : desc ?? this.desc,
       date : date ?? this.date
     );
