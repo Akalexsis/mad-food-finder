@@ -66,6 +66,7 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Column( children: [
         Text('Add Food Spot', style: TextStyle( fontSize: 24 ), textAlign: TextAlign.center ),
 

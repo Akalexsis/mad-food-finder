@@ -51,6 +51,7 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
         child: Column(
           children: [
@@ -60,6 +61,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   Image.network(spot.imageUrl, height: 150, width: double.infinity),
                   Text(spot.name, style: TextStyle( fontSize: 24, fontWeight: FontWeight.w500)),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [ 
                       Text(spot.hours, style: TextStyle( fontSize: 18, color: Colors.blueGrey)),
                       Text(spot.cuisine, style: TextStyle( fontSize: 18, color: Colors.blueGrey)),

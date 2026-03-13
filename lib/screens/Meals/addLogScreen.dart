@@ -64,6 +64,7 @@ class _AddLogScreenState extends State<AddLogScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Column( children: [
         Text('New Meal Log', style: TextStyle( fontSize: 24 ), textAlign: TextAlign.center ),
 

@@ -3,12 +3,9 @@
   Purpose - Render each screen and display navigation bar
  */
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'screens/Meals/mealScreen.dart';
 import 'screens/Home/foodScreen.dart';
-=======
 import '../screens/Budget/BudgetScreen.dart';
->>>>>>> 7679864f392e6fd19f3652f7277865c492b19cef
 
 void main() {
   runApp(const FoodFinderApp());
@@ -21,11 +18,10 @@ class FoodFinderApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-<<<<<<< HEAD
       title: 'Food Finder',
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
-        length: 2, // UPDATE TO 4
+        length: 3, // UPDATE TO 4
         child: Scaffold(
           appBar: AppBar(
             title: Text('Food Finder', textAlign: TextAlign.center,),
@@ -33,25 +29,22 @@ class FoodFinderApp extends StatelessWidget {
             foregroundColor: Colors.white,
             bottom: const TabBar(
               tabs: [
-                Tab(text: "Home"),
-                Tab(text: "Meal Logs"),
-                // Tab(text: "Budget"),
-                // Tab(text: "Profile"),
+                Tab(icon: Icon(Icons.food_bank) , text: "Foods"),
+                Tab(icon: Icon(Icons.lunch_dining_outlined),text: "Meal Logs"),
+                Tab(icon: Icon(Icons.attach_money_rounded), text: "Budget"),
+                // Tab(icon: Icon(Icons.account_circle_rounded), text: "Profile"),
               ],
             ),
           ),
           body: const TabBarView(
             children: [
               FoodScreen(),
-              MealScreen()
+              MealScreen(),
+              BudgetScreen(),
             ],
           )
         )
       )
-=======
-      title: 'Flutter Demo',
-      home: BudgetScreen(),
->>>>>>> 7679864f392e6fd19f3652f7277865c492b19cef
     );
     
   }
