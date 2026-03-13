@@ -3,11 +3,8 @@
   Purpose - Render each screen and display navigation bar
  */
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import '../screens/mealScreen.dart';
-=======
-import 'screens/foodScreen.dart';
->>>>>>> 9513c6f7ea20119a2db1510c7772047638c2229e
+import 'screens/Meals/mealScreen.dart';
+import 'screens/Home/foodScreen.dart';
 
 void main() {
   runApp(const FoodFinderApp());
@@ -20,14 +17,10 @@ class FoodFinderApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-<<<<<<< HEAD
-      title: 'Flutter Demo',
-      home: MealScreen(),
-=======
       title: 'Food Finder',
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
-        length: 1, // UPDATE TO 4
+        length: 2, // UPDATE TO 4
         child: Scaffold(
           appBar: AppBar(
             title: Text('Food Finder', textAlign: TextAlign.center,),
@@ -36,7 +29,7 @@ class FoodFinderApp extends StatelessWidget {
             bottom: const TabBar(
               tabs: [
                 Tab(text: "Home"),
-                // Tab(text: "Meals"),
+                Tab(text: "Meal Logs"),
                 // Tab(text: "Budget"),
                 // Tab(text: "Profile"),
               ],
@@ -45,11 +38,11 @@ class FoodFinderApp extends StatelessWidget {
           body: const TabBarView(
             children: [
               FoodScreen(),
+              MealScreen()
             ],
           )
         )
       )
->>>>>>> 9513c6f7ea20119a2db1510c7772047638c2229e
     );
     
   }

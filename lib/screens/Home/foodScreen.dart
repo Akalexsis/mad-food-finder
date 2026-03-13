@@ -3,9 +3,9 @@
   Purpose - Render list of food spots and route users to Foods screen so they can view more Foods
  */
 import 'package:flutter/material.dart';
-import '../screens/detailScreen.dart';
-import '../screens/addFoodScreen.dart';
-import '../data/food_data.dart'; // FOR TESTING ONLY
+import 'detailScreen.dart';
+import 'addFoodScreen.dart';
+import '../../data/food_data.dart'; // FOR TESTING ONLY
 
 class FoodScreen extends StatefulWidget {
   const FoodScreen({super.key});

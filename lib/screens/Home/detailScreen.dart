@@ -3,9 +3,9 @@
   Purpose - Render details about food spots
 */
 import 'package:flutter/material.dart';
-import '../models/food_model.dart';
-import '../models/review_model.dart';
-import '../screens/reviewScreen.dart';
+import '../../models/food_model.dart';
+import '../../models/review_model.dart';
+import 'reviewScreen.dart';
 
 class DetailScreen extends StatefulWidget {
   // accept and save food spot
@@ -21,7 +21,18 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   // store info of corresponding food spot with related reviews
   late final FoodSpot spot;
-  late final List<Review> reviews;
+  List<Review> reviews = [ // FOR TESTING ONLY DELETE WHEN DATABASE INITIALIZED
+    Review(
+      name: 'Kayla', 
+      desc: 'This place is great!', 
+      date: 'Mar 16, 2026'
+    ),
+    Review(
+      name: 'Zah', 
+      desc: 'Do not listen to Kayla. This place sucks!', 
+      date: 'Mar 17, 2026'
+    ),
+  ];
 
 
   // initialize food spot data

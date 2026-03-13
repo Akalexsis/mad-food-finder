@@ -37,6 +37,9 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
 
     // reset form
     _resetForm();
+
+    // navigate to previous screen
+    Navigator.pop(context);
   }
 
   // clear form after successfully submitting form

@@ -3,10 +3,10 @@
   Purpose - Render all meal logs
  */
 import 'package:flutter/material.dart';
-import '../models/meal_model.dart';
-import '../data/meal_data.dart'; // FOR TESTING ONLY
-import '../screens/addLogScreen.dart';
-import '../ui/mealLogUi.dart';
+import '../../models/meal_model.dart';
+import '../../data/meal_data.dart'; // FOR TESTING ONLY
+import 'addLogScreen.dart';
+import '../../ui/mealLogUi.dart';
 
 class MealScreen extends StatefulWidget {
   const MealScreen({super.key});
@@ -31,11 +31,6 @@ class _MealScreenState extends State<MealScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Meal log', textAlign: TextAlign.center,),
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
-      ),
       body: SingleChildScrollView( // make page scrollable
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
