@@ -2,16 +2,72 @@
  * Author - Kayla Thornton
  * Purpose - Allow users to track meal expenses
  */
-
 import 'package:flutter/material.dart';
+import '../../models/meal_model.dart';
+import '../../ui/mealLogUi.dart';
+import '../../data/meal_data.dart'; // DELETE - FOR TESTING ONLY
 
-class BudgetScreen extends StatelessWidget{
+class BudgetScreen extends StatefulWidget{
   const BudgetScreen({super.key});
 
   @override
+  _BudgetScreenState createState() => _BudgetScreenState();
+}
+
+class _BudgetScreenState extends State<BudgetScreen> {
+  double budgetProgress = 0.0; // tracks amount spent (for progress bar)
+  double amountSpent = 60.0; // tracks amount spent by user
+  double monthlyBudget = 500.0; // monthly budget amount set by user
+  late final List<MealModel> weekLogs; // store all logs for this week
+
+  // TO-DO - GET THIS WEEK'S MEALS
+
+  // TO-DO - Calculate how much the user has spent this month
+
+  // Update budgetProgress to reflect how much user has spent and how much remains
+  void getBudget() {
+    setState(() => 
+      budgetProgress = amountSpent / monthlyBudget
+    );
+  }
+  
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('Budget Screen')
+      body: SingleChildScrollView( // make entire page scrollable
+        child: Column(
+          children: [
+            // Display progress bar of how much user has spent 
+            ListTile(
+                title: Text('Monthly Spending', style: TextStyle( fontSize: 18 )),
+                subtitle: Column(
+                  children: [
+                    LinearProgressIndicator(
+                      value: budgetProgress,
+                      semanticsLabel: 'Spending Summary',
+                      color: Colors.green,
+                      backgroundColor: Colors.blueGrey,
+                    ),
+
+                    Row( 
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('\$$amountSpent Spent', style: TextStyle( color: Colors.blueGrey)),
+                        Text('\$${monthlyBudget - amountSpent} Remaining', style: TextStyle( color: Colors.blueGrey)),
+                      ],
+                    )
+                  ],
+                )
+              ),
+
+            // TO DO - Implement Summary section
+
+            
+            // Use reusable widget 'meal Log Ui' to display this week's expenses
+            sampleLogs.isEmpty ? Text('No meals tracked for this week') : MealLogUi(mealLogs: sampleLogs, header: "This week's Logs")
+          ],
+        )
+      )
     );
   }
 }
