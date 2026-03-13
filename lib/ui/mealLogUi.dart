@@ -4,7 +4,7 @@
  */
 import 'package:flutter/material.dart';
 import '../models/meal_model.dart';
-import '../screens/mealDetailsScreen.dart';
+import '../screens/Meal/mealDetailsScreen.dart';
 
 class MealLogUi extends StatelessWidget {
   final List<MealModel> mealLogs;

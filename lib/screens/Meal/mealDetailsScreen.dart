@@ -3,7 +3,7 @@
   Purpose - Render details about meal logs
 */
 import 'package:flutter/material.dart';
-import '../models/meal_model.dart';
+import '../../models/meal_model.dart';
 
 class MealDetailScreen extends StatefulWidget {
   // accept and save food log
