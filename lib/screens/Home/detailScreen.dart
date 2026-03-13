@@ -70,7 +70,17 @@ class _DetailScreenState extends State<DetailScreen> {
 
             // Show spot reviews
             Text('Reviews', style: TextStyle( fontSize: 24, fontWeight: FontWeight.w500), textAlign: TextAlign.start,),
-
+            
+            ElevatedButton( // go to review page to add new review
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ReviewScreen())
+                );
+               },
+               child: Text('Add Review')
+            ),
+            
             // conditionally render reviews
             reviews.isEmpty ? Text('Add a review!') : 
             
@@ -88,17 +98,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   );
                 },
               ),
-            ),
-
-            ElevatedButton( // go to review page to add new review
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ReviewScreen())
-                );
-               },
-               child: Text('Add Review')
-            ),
+            ),            
           ],
         )
       )
