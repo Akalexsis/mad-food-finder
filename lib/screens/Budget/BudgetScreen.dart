@@ -15,11 +15,14 @@ class BudgetScreen extends StatefulWidget{
 }
 
 class _BudgetScreenState extends State<BudgetScreen> {
+  // BUDGET RELATED VARIABLES
   double budgetProgress = 0.0; // tracks amount spent (for progress bar)
   double amountSpent = 60.0; // tracks amount spent by user
   double monthlyBudget = 500.0; // monthly budget amount set by user
   late final List<MealModel> weekLogs; // store all logs for this week
 
+  // SUMMARY RELATED VARIABLES
+  
   // TO-DO - GET THIS WEEK'S MEALS
 
   // TO-DO - Calculate how much the user has spent this month
@@ -60,10 +63,40 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 )
               ),
 
-            // TO DO - Implement Summary section
+            // SPENDING SUMMARY
+            Card(
+              child: Column(
+                children: [
+                  Text('Spending Summary: ', style: TextStyle( fontSize: 24 ),),
 
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Most Visited:'),
+                      Text('Moes')
+                    ],
+                  ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Most Visited:'),
+                      Text('Moes')
+                    ],
+                  ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Most Visited:'),
+                      Text('Moes')
+                    ],
+                  ),
+                ],
+              )
+            ),
             
-            // Use reusable widget 'meal Log Ui' to display this week's expenses
+            // Display this week's logs only
             sampleLogs.isEmpty ? Text('No meals tracked for this week') : MealLogUi(mealLogs: sampleLogs, header: "This week's Logs")
           ],
         )
