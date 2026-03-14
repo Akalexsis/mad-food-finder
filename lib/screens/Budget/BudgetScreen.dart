@@ -86,7 +86,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   ),
 
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Most Visited:'),
                       Text('Moes')
