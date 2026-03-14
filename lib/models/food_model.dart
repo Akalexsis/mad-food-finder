@@ -22,7 +22,7 @@ class FoodSpot {
   });
 
   // map to match database columns for database use 'column' : obj_name
-  Map toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'id' : id,
       'name': name,
@@ -35,7 +35,7 @@ class FoodSpot {
   }
 
   // convert databse record to object model obj_name : map['column']
-  factory FoodSpot.fromMap(Map map) {
+  factory FoodSpot.fromMap(Map<String, dynamic> map) {
     return FoodSpot(
       id: map['id'],
       name: map['name'], 

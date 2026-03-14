@@ -18,7 +18,7 @@ class Review {
   });
 
   // map to match database columns for database use 'column' : obj_name
-  Map toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'id' : id,
       'name': name,
@@ -29,7 +29,7 @@ class Review {
   }
 
   // convert databse record to object model obj_name : map['column']
-  factory Review.fromMap(Map map) {
+  factory Review.fromMap(Map<String, dynamic> map) {
     return Review(
       id: map['id'],
       name: map['name'], 
