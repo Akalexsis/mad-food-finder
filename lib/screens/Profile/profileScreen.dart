@@ -15,18 +15,29 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   // store settings
-  late String username;
-  late String cuisine;
-  late int budget;
+  late String? username;
+  late String? displayName;
+  late String? cuisine;
+  late double? budget;
 
   // get settings
+  @override
   void initState(){
     super.initState();
+    _getPrefs();
   }
 
   // get user preferences
-  Future<void> getPrefs() async {
+  Future<void> _getPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // render values for each category
+    setState( () {
+      username = prefs.getString('username') ?? ''; // only render values that exist
+      displayName = prefs.getString('display') ?? '';
+      cuisine = prefs.getString('cuisine') ?? '';
+      budget = prefs.getDouble('budget') ?? 0;
+    });
   }
 
   @override
@@ -36,16 +47,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         mainAxisAlignment: .start,
         children: [
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.push(
                 context,
-                MaterialPageRoute( builder: (context) => EditProfile() )
+                MaterialPageRoute( builder: (context) => EditProfile() ),
               );
+
+              await _getPrefs(); // refresh page after saving profile edits
             }, 
             child: Text('Edit') 
           ),
           // Render username, profile pic, number of favorites, and number of spots visited
             // add edit profile button and view favorites button
+          Text('Name: $displayName'),
+          Text('Username: $username'),
+          Text('Monthly Budget: \$$budget'),
+          Text('Preferred Cuisine: $cuisine'),
+          
 
           // List information to get from user (budget amount)
         ],

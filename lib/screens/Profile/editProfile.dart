@@ -23,21 +23,21 @@ class _EditProfileState extends State<EditProfile> {
   // load text fields with existing data
 
   // save form values and re-route to profile screen
-  Future<void> savePrefs() async {
+  Future<void> _savePrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     double budgetValue = double.parse( _budgetController.text ); // convert budget's value to double
 
     // save form values in shared preferences
     await prefs.setString('username', _usernameController.text);
     await prefs.setDouble('budget', budgetValue);
-    await prefs.setString('name', _displayNameController.text);
+    await prefs.setString('display', _displayNameController.text);
     await prefs.setString('cuisine', _cuisineController.text);
 
     // route to profile screen
     const confirm = SnackBar(content: Text('Profile Updated'),);
     ScaffoldMessenger.of(context).showSnackBar(confirm);
 
-    Navigator.pop(context);
+    Navigator.pop(context); 
   }
 
 
@@ -88,7 +88,7 @@ class _EditProfileState extends State<EditProfile> {
             ),
 
             ElevatedButton(
-              onPressed: () { savePrefs(); }, 
+              onPressed: () { _savePrefs(); }, 
               child: Text('Save')
             ),
           ],
