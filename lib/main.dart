@@ -5,7 +5,8 @@
 import 'package:flutter/material.dart';
 import 'screens/Meals/mealScreen.dart';
 import 'screens/Home/foodScreen.dart';
-import '../screens/Budget/BudgetScreen.dart';
+import 'screens/Budget/BudgetScreen.dart';
+import 'screens/db_test_screen.dart';  
 
 void main() {
   runApp(const FoodFinderApp());
@@ -21,18 +22,18 @@ class FoodFinderApp extends StatelessWidget {
       title: 'Food Finder',
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
-        length: 3, // UPDATE TO 4
+        length: 4, // Updated to 4 tabs
         child: Scaffold(
           appBar: AppBar(
             title: Text('Food Finder', textAlign: TextAlign.center,),
-            backgroundColor: Colors.green,
-            foregroundColor: Colors.white,
+            backgroundColor: const Color.fromARGB(255, 142, 201, 110),
+            foregroundColor: const Color.fromARGB(255, 246, 248, 212),
             bottom: const TabBar(
               tabs: [
-                Tab(icon: Icon(Icons.food_bank) , text: "Foods"),
-                Tab(icon: Icon(Icons.lunch_dining_outlined),text: "Meal Logs"),
+                Tab(icon: Icon(Icons.food_bank), text: "Foods"),
+                Tab(icon: Icon(Icons.lunch_dining_outlined), text: "Meal Logs"),
                 Tab(icon: Icon(Icons.attach_money_rounded), text: "Budget"),
-                // Tab(icon: Icon(Icons.account_circle_rounded), text: "Profile"),
+                Tab(icon: Icon(Icons.storage), text: "DB Test"), // New DB Test tab
               ],
             ),
           ),
@@ -41,12 +42,11 @@ class FoodFinderApp extends StatelessWidget {
               FoodScreen(),
               MealScreen(),
               BudgetScreen(),
+              DatabaseTestScreen(), //  DB test screen 
             ],
           )
         )
       )
     );
-    
   }
 }
-
