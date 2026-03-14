@@ -3,6 +3,7 @@
  * Purpose - Allow users to update their settings 
  */
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfile extends StatefulWidget {
@@ -21,9 +22,33 @@ class _EditProfileState extends State<EditProfile> {
   
   // load text fields with existing data
 
-  // save set values and re-route to profile screen
+  // save form values and re-route to profile screen
   Future<void> savePrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    double budgetValue = double.parse( _budgetController.text ); // convert budget's value to double
 
+    // save form values in shared preferences
+    await prefs.setString('username', _usernameController.text);
+    await prefs.setDouble('budget', budgetValue);
+    await prefs.setString('name', _displayNameController.text);
+    await prefs.setString('cuisine', _cuisineController.text);
+
+    // route to profile screen
+    const confirm = SnackBar(content: Text('Profile Updated'),);
+    ScaffoldMessenger.of(context).showSnackBar(confirm);
+
+    Navigator.pop(context);
+  }
+
+
+  // dispose of controllers 
+  @override 
+  void dispose(){
+    _usernameController.dispose();
+    _budgetController.dispose();
+    _cuisineController.dispose();
+    _displayNameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -50,6 +75,10 @@ class _EditProfileState extends State<EditProfile> {
             Text('Monthly Budget', style: TextStyle( fontSize: 18 ), textAlign: .start),
             TextField(
               controller: _budgetController,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[\d\.]')) // allow decimal values
+              ],
+              keyboardType: TextInputType.numberWithOptions( decimal: true ),
             ),
 
             // TO-DO ADD STYLING AND SET INITIAL VALUE TO BE THE CURRENT VALUE

@@ -3,6 +3,7 @@
  * Purpose - Allow users to view their settings
  */
 import 'package:flutter/material.dart';
+import '../Profile/editProfile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -34,6 +35,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Column(
         mainAxisAlignment: .start,
         children: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute( builder: (context) => EditProfile() )
+              );
+            }, 
+            child: Text('Edit') 
+          ),
           // Render username, profile pic, number of favorites, and number of spots visited
             // add edit profile button and view favorites button
 
