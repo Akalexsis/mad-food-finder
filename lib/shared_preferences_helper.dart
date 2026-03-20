@@ -8,13 +8,13 @@ class SharedPreferencesHelper {
   // Keys for all questionnaire answers
   static const String keyHasCompletedQuestionnaire = 'has_completed_questionnaire';
   static const String keyCuisinePreferences = 'cuisine_preferences';     // List<String>
-  static const String keyDietaryRestrictions = 'dietary_restrictions';   // List<String>
-  static const String keyAllergies = 'allergies';                         // List<String>
-  static const String keyMonthlyBudget = 'monthly_budget';               // String (e.g. "50-100")
-  static const String keyMealFrequency = 'meal_frequency';               // String
+  static const String keyDietaryRestrictions = 'dietary_restrictions';   //     |
+  static const String keyAllergies = 'allergies';                        //    ...
+  static const String keyMonthlyBudget = 'monthly_budget';               // String (e.g. "100.52")
+  static const String keyMealFrequency = 'meal_frequency';               
   static const String keyClassSchedule = 'class_schedule';               // String (e.g. "MWF", "TTh")
-  static const String keyBusiestDays = 'busiest_days';                   // List<String>
-  static const String keyDiningGoal = 'dining_goal';                     // String
+  static const String keyBusiestDays = 'busiest_days';                   
+  static const String keyDiningGoal = 'dining_goal';                     
 
   // ─── COMPLETED FLAG ───────────────────────────────────────────────────────
 
