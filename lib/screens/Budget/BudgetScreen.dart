@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../models/meal_model.dart';
 import '../../ui/mealLogUi.dart';
 import '../../database_helper.dart';
-import '/shared_preference_helper.dart';
+import '/shared_preferences_helper.dart';
 
 class BudgetScreen extends StatefulWidget {
   const BudgetScreen({super.key});
