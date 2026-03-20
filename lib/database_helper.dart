@@ -196,6 +196,115 @@ class DatabaseHelper {
     return null;
   }
 
+  // MEAL LOG OPERATIONS
+  Future<int> insertMeal(MealModel meal) async {
+    final db = await instance.database;
+    return await db.insert('meals', meal.toMap());
+  }
+
+  Future<int> updateMeal(MealModel meal) async {
+    final db = await instance.database;
+    return await db.update(
+      'meals',
+      meal.toMap(),
+      where: 'id = ?',
+      whereArgs: [meal.id],
+    );
+  }
+
+  Future<int> deleteMeal(int id) async {
+    final db = await instance.database;
+    return await db.delete(
+      'meals',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<List<MealModel>> getAllMeals() async {
+    final db = await instance.database;
+    final result = await db.query('meals');
+    final all = result.map((map) => MealModel.fromMap(map)).toList();
+    all.sort((a, b) {
+      final da = _parseDateString(a.date);
+      final db2 = _parseDateString(b.date);
+      if (da == null || db2 == null) return 0;
+      return db2.compareTo(da);
+    });
+    return all;
+  }
+
+  Future<List<MealModel>> getMealsThisMonth() async {
+    final db = await instance.database;
+    final result = await db.query('meals');
+    final all = result.map((map) => MealModel.fromMap(map)).toList();
+
+    final now = DateTime.now();
+    final filtered = all.where((meal) {
+      final parsed = _parseDateString(meal.date);
+      if (parsed == null) return false;
+      return parsed.month == now.month && parsed.year == now.year;
+    }).toList();
+
+    filtered.sort((a, b) {
+      final da = _parseDateString(a.date);
+      final db2 = _parseDateString(b.date);
+      if (da == null || db2 == null) return 0;
+      return db2.compareTo(da);
+    });
+
+    return filtered;
+  }
+
+  Future<List<MealModel>> getMealsThisWeek() async {
+    final db = await instance.database;
+    final result = await db.query('meals');
+    final all = result.map((map) => MealModel.fromMap(map)).toList();
+
+    final now = DateTime.now();
+    final sevenDaysAgo = now.subtract(const Duration(days: 7));
+
+    final filtered = all.where((meal) {
+      final parsed = _parseDateString(meal.date);
+      if (parsed == null) return false;
+      return parsed.isAfter(sevenDaysAgo) &&
+          parsed.isBefore(now.add(const Duration(days: 1)));
+    }).toList();
+
+    filtered.sort((a, b) {
+      final da = _parseDateString(a.date);
+      final db2 = _parseDateString(b.date);
+      if (da == null || db2 == null) return 0;
+      return db2.compareTo(da);
+    });
+
+    return filtered;
+  }
+
+  Future<double> getMonthlySpending() async {
+    final meals = await getMealsThisMonth();
+    return meals.fold<double>(0.0, (sum, meal) => sum + meal.cost);
+  }
+
+  DateTime? _parseDateString(String date) {
+    try {
+      const months = {
+        'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4,
+        'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8,
+        'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12
+      };
+      final parts = date.replaceAll(',', '').split(' ');
+      final month = months[parts[0]];
+      final day = int.parse(parts[1]);
+      final year = int.parse(parts[2]);
+      if (month == null) return null;
+      return DateTime(year, month, day);
+    } catch (e) {
+      return null;
+    }
+  }
+
+
   
   Future close() async {
     final db = await instance.database;
