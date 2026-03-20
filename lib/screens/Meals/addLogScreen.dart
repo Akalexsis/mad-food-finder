@@ -58,7 +58,6 @@ class _AddLogScreenState extends State<AddLogScreen> {
     }
   }
 
-  // ensure inputs are correct data type and fields aren't empty
   // Validate form inputs
   bool _validateForm() {
     if (_formKey.currentState?.validate() ?? false) {
@@ -132,77 +131,148 @@ class _AddLogScreenState extends State<AddLogScreen> {
     super.dispose();
   }
 
-  @override
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          Text(
-            'New Meal Log',
-            style: TextStyle(fontSize: 24),
-            textAlign: TextAlign.center,
+      appBar: AppBar(
+        title: Text('New Meal Log'),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Create a New Meal Log',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                
+                // Name field
+                Text(
+                  'Name',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: 8),
+                TextFormField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Log Name',
+                    hintText: 'e.g., Lunch at Joe\'s Diner',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter a name';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                
+                // Description field
+                Text(
+                  'Description',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: 8),
+                TextFormField(
+                  controller: _descController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    labelText: 'What did you order?',
+                    hintText: 'I ordered a cheeseburger and fries...',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter a description';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                
+                // Date field
+                Text(
+                  'Date',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: 8),
+                TextFormField(
+                  controller: _dateController,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'Select Date',
+                    border: OutlineInputBorder(),
+                    suffixIcon: Icon(Icons.calendar_today),
+                  ),
+                  onTap: () => _selectDate(context),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select a date';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                
+                // Cost field
+                Text(
+                  'Cost',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: 8),
+                TextFormField(
+                  controller: _costController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                  ],
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(
+                    labelText: 'How much did you spend?',
+                    hintText: '15.99',
+                    border: OutlineInputBorder(),
+                    prefixText: '\$ ',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter a cost';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid number';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 30),
+                
+                // Submit button
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: _addLogSpot,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text(
+                      'Submit',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-
-          // accept all input
-          Text(
-            'Name',
-            style: TextStyle(fontSize: 18),
-            textAlign: TextAlign.start,
-          ),
-          TextField(
-            controller: _nameController,
-            decoration: InputDecoration(labelText: 'Log Name'),
-          ),
-          SizedBox(height: 20),
-
-          Text(
-            'Description',
-            style: TextStyle(fontSize: 18),
-            textAlign: TextAlign.start,
-          ),
-          TextField(
-            controller: _descController,
-            decoration: InputDecoration(labelText: 'I ordered ... '),
-          ),
-
-          Text(
-            'date',
-            style: TextStyle(fontSize: 18),
-            textAlign: TextAlign.start,
-          ),
-          TextField(
-            controller: _dateController,
-            decoration: InputDecoration(labelText: 'Mar 16, 2026'),
-          ),
-          SizedBox(height: 20),
-
-          Text(
-            'Cost',
-            style: TextStyle(fontSize: 18),
-            textAlign: TextAlign.start,
-          ),
-          TextField(
-            controller: _costController,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(
-                RegExp(r'[\d\.]'),
-              ), // allow decimal values
-            ],
-            keyboardType: TextInputType.numberWithOptions(
-              decimal: true,
-            ), // accept double int values from users
-            decoration: InputDecoration(labelText: 'I spent ...'),
-          ),
-          SizedBox(height: 20),
-
-          ElevatedButton(
-            onPressed: () {
-              _addLogSpot();
-            },
-            child: Text('Submit'),
-          ),
-        ],
+        ),
       ),
     );
   }
