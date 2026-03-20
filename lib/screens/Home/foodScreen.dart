@@ -157,57 +157,69 @@ class _FoodScreenState extends State<FoodScreen> {
 
 
 
-          // FOOD SPOT LIST: Render each food spot as a clickable card
+          // ── Food spot list ────────────────────────────────────────────────
           Expanded(
-            child: ListView.builder(
-              itemCount: spots.length,
-              itemBuilder: (context, index) {
-                final spot = spots[index];
-
-                return Card(
-                  child: ListTile(
-                    title: Image.network(
-                      spot.imageUrl,
-                      height: 100,
-                      width: double.infinity,
-                    ),
-                    subtitle: Column(
-                      // vertically list all spot details
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(spot.name, style: TextStyle(fontSize: 24)),
-                        Text(
-                          spot.hours,
-                          style: TextStyle(color: Colors.blueGrey),
-                        ),
-                        Text(
-                          '\$${spot.cost}',
-                          style: TextStyle(color: Colors.lightGreen),
-                        ),
-                      ],
-                    ),
-                    isThreeLine: true,
-                    trailing: IconButton(
-                      onPressed: () => _updateFavorite(spot),
-                      icon: spot.isFavorite
-                          ? const Icon(Icons.favorite, color: Colors.red)
-                          : const Icon(Icons.favorite_border),
-                    ),
-                    onTap: () {
-                      // navigate to details screen when card tapped
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailScreen(spot: spot),
+            child: spots.isEmpty
+                ? const Center(
+                    child: Text('No spots match your filters.',
+                        style: TextStyle(color: Colors.blueGrey)),
+                  )
+                : ListView.builder(
+                    itemCount: spots.length,
+                    itemBuilder: (context, index) {
+                      final spot = spots[index];
+                      return Card(
+                        child: ListTile(
+                          title: Image.network(
+                            spot.imageUrl,
+                            height: 100,
+                            width: double.infinity,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) => Container(
+                              height: 100,
+                              color: Colors.grey[200],
+                              child: const Icon(Icons.restaurant, size: 50, color: Colors.grey),
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(spot.name, style: const TextStyle(fontSize: 24)),
+                              Text(spot.hours, style: const TextStyle(color: Colors.blueGrey)),
+                              Text('\$${spot.cost}', style: const TextStyle(color: Colors.lightGreen)),
+                              Text(spot.cuisine, style: const TextStyle(fontSize: 12, color: Colors.blueGrey)),
+                            ],
+                          ),
+                          isThreeLine: true,
+                          trailing: IconButton(
+                            onPressed: () => _updateFavorite(spot),
+                            icon: spot.isFavorite
+                                ? const Icon(Icons.favorite, color: Colors.red)
+                                : const Icon(Icons.favorite_border),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => DetailScreen(spot: spot)),
+                            );
+                          },
                         ),
                       );
                     },
                   ),
-                );
-              },
-            ),
           ),
         ],
+      ),
+
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AddFoodScreen()),
+        ),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.add),
+        label: const Text('Add Spot'),
       ),
     );
   }
