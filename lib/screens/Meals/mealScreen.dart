@@ -19,26 +19,24 @@ class MealScreen extends StatefulWidget {
 class _MealScreenState extends State<MealScreen> {
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
 
-  // TO-DO store meals by week, month, and all past
-  late final List<MealModel> weekLogs;
-  late final List<MealModel> monthLogs;
-  late final List<MealModel> pastLogs;
+  List<MealModel> weekLogs = [];    // CHANGED: removed late final
+  List<MealModel> monthLogs = [];   // CHANGED: removed late final
+  List<MealModel> pastLogs = [];    // CHANGED: removed late final
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadMeals();  // CHANGE THIS LINE
+    _loadMeals();
   }
 
-  // ADD THIS METHOD
   Future<void> _loadMeals() async {
     setState(() => _isLoading = true);
     try {
       final week = await _databaseHelper.getMealsThisWeek();
       final month = await _databaseHelper.getMealsThisMonth();
       final past = await _databaseHelper.getAllMeals();
-      
+
       setState(() {
         weekLogs = week;
         monthLogs = month;
@@ -51,39 +49,64 @@ class _MealScreenState extends State<MealScreen> {
     }
   }
 
-  // TO-DO get all meals by week, month, and all past and
-
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _isLoading  // loading screen check
+      appBar: AppBar(
+        title: Text('Meal Log', textAlign: TextAlign.center),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+      ),
+      body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView( //makes it scrollable
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-              // route to add log screen so users can create new meal log
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute( builder: (context) => AddLogScreen() )
-                );
-              }, 
-              child: Text('New Log')),
+          : RefreshIndicator(                              // CHANGE 5: Added RefreshIndicator
+              onRefresh: _loadMeals,
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),  // CHANGE 5: Added physics
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(                                // CHANGE 6: Added Padding
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: () async {               // CHANGE 6: Made async
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AddLogScreen()),
+                          );
+                          _loadMeals();                     // CHANGE 6: Refresh after adding
+                        },
+                        child: Text('New Log'),
+                      ),
+                    ),
 
-            //TO-DO - CHANGE SAMPLE LOGS TO LIST OF LOGS FROM THIS WEEK pass 'weekLogs' to mealLogs 
-            sampleLogs.isEmpty ? Text('No logs tracked for this week') : MealLogUi(mealLogs: sampleLogs, header: 'This Week'),
+                    // CHANGE 7: Replace sampleLogs with weekLogs
+                    weekLogs.isEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('No logs tracked for this week'),
+                          )
+                        : MealLogUi(mealLogs: weekLogs, header: 'This Week'),
 
-            // TO-DO - GET ALL LOGS FROM THIS MONTH if no logs, display 'no tracked logs' message
-            sampleLogs.isEmpty ? Text('No logs tracked for this month') : MealLogUi(mealLogs: sampleLogs, header: 'This Month'),
+                    // CHANGE 7: Replace sampleLogs with monthLogs
+                    monthLogs.isEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('No logs tracked for this month'),
+                          )
+                        : MealLogUi(mealLogs: monthLogs, header: 'This Month'),
 
-            // TO-DO - GET ALL PAST LOGS if no logs, display 'no tracked logs' message
-            sampleLogs.isEmpty ? Text('No past logs tracked') : MealLogUi(mealLogs: sampleLogs, header: 'All Past'),
-
-          ],
-        )
-      )
+                    // CHANGE 7: Replace sampleLogs with pastLogs
+                    pastLogs.isEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('No past logs tracked'),
+                          )
+                        : MealLogUi(mealLogs: pastLogs, header: 'All Past'),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 }
