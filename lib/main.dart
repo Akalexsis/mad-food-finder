@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:mad_food_finder/screens/Profile/profileScreen.dart';
 import 'screens/Meals/mealScreen.dart';
 import 'screens/Home/foodScreen.dart';
-import 'screens/Budget/BudgetScreen.dart';
+import 'screens/Budget/budgetScreen.dart';
 import 'screens/db_test_screen.dart';  
 import 'screens/Profile/profileScreen.dart';
 
