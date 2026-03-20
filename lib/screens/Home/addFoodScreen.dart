@@ -15,16 +15,14 @@ class AddFoodScreen extends StatefulWidget {
 
 class _AddFoodScreenState extends State<AddFoodScreen> {
   final _formKey = GlobalKey<FormState>();
-
-  // convert to list for code readability
+  
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _imageController = TextEditingController();
   final TextEditingController _hoursController = TextEditingController();
   final TextEditingController _costController = TextEditingController();
   final TextEditingController _cuisineController = TextEditingController();
-
-   bool _isSubmitting = false;
-
+  
+  bool _isSubmitting = false;
 
   // Validate form inputs
   bool _validateForm() {
@@ -100,8 +98,7 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
     }
   }
 
-
-  // clear form after successfully submitting form
+  // Clear form after successfully submitting form
   void _resetForm() {
     setState(() {
       _nameController.clear();
@@ -126,77 +123,149 @@ class _AddFoodScreenState extends State<AddFoodScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          Text(
-            'Add Food Spot',
-            style: TextStyle(fontSize: 24),
-            textAlign: TextAlign.center,
-          ),
+      appBar: AppBar(
+        title: const Text('Add Food Spot'),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Add New Food Spot',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              
+              // Name field
+              const Text('Name *', style: TextStyle(fontSize: 18)),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Restaurant name',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.restaurant),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter a restaurant name';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
 
-          // accept all input
-          Text(
-            'Name',
-            style: TextStyle(fontSize: 18),
-            textAlign: TextAlign.start,
-          ),
-          TextField(
-            controller: _nameController,
-            decoration: InputDecoration(labelText: 'Resturant name'),
-          ),
-          SizedBox(height: 20),
+              // Image URL field
+              const Text('Image *', style: TextStyle(fontSize: 18)),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _imageController,
+                decoration: const InputDecoration(
+                  labelText: 'Image URL',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.image),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter an image URL';
+                  }
+                  // Basic URL validation
+                  if (!value.startsWith('http://') && !value.startsWith('https://')) {
+                    return 'Please enter a valid URL (starting with http:// or https://)';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
 
-          Text(
-            'Image',
-            style: TextStyle(fontSize: 18),
-            textAlign: TextAlign.start,
-          ),
-          TextField(
-            controller: _imageController,
-            decoration: InputDecoration(labelText: 'Image URL'),
-          ),
+              // Hours field
+              const Text('Hours *', style: TextStyle(fontSize: 18)),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _hoursController,
+                decoration: const InputDecoration(
+                  labelText: '9:00AM - 5:00PM',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.access_time),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter operating hours';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
 
-          Text(
-            'Hours',
-            style: TextStyle(fontSize: 18),
-            textAlign: TextAlign.start,
-          ),
-          TextField(
-            controller: _hoursController,
-            decoration: InputDecoration(labelText: '9:00AM - 5:00PM'),
-          ),
-          SizedBox(height: 20),
+              // Cost field
+              const Text('Cost *', style: TextStyle(fontSize: 18)),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _costController,
+                decoration: const InputDecoration(
+                  labelText: 'Average cost (e.g., 15)',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.attach_money),
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter an average cost';
+                  }
+                  if (int.tryParse(value) == null) {
+                    return 'Please enter a valid number';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
 
-          Text(
-            'Cost',
-            style: TextStyle(fontSize: 18),
-            textAlign: TextAlign.start,
-          ),
-          TextField(
-            controller: _costController,
-            decoration: InputDecoration(labelText: 'Agerage cost'),
-          ),
-          SizedBox(height: 20),
+              // Cuisine field
+              const Text('Cuisine *', style: TextStyle(fontSize: 18)),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _cuisineController,
+                decoration: const InputDecoration(
+                  labelText: 'American, Italian,...',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.restaurant_menu),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter a cuisine type';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 32),
 
-          Text(
-            'Cuisine',
-            style: TextStyle(fontSize: 18),
-            textAlign: TextAlign.start,
+              // Submit button
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: _isSubmitting ? null : _addFoodSpot,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: _isSubmitting
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          'Submit',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                ),
+              ),
+            ],
           ),
-          TextField(
-            controller: _cuisineController,
-            decoration: InputDecoration(labelText: 'American, Italian,...'),
-          ),
-          SizedBox(height: 20),
-
-          ElevatedButton(
-            onPressed: () {
-              _addFoodSpot();
-            },
-            child: Text('Submit'),
-          ),
-        ],
+        ),
       ),
     );
   }
