@@ -73,39 +73,69 @@ class _BudgetScreenState extends State<BudgetScreen> {
         body: Center(child: CircularProgressIndicator(color: Colors.green)),
       );
     }
+      final remaining = monthlyBudget - amountSpent;
+    final isOverBudget = remaining < 0;
+
     return Scaffold(
       body: SingleChildScrollView(
         // make entire page scrollable
-        child: Column(
+       child: Column(
           children: [
-            // Display progress bar of how much user has spent
+            // Progress bar showing monthly remaining based on budget amount specified in rpeferences
             ListTile(
-              title: Text('Monthly Spending', style: TextStyle(fontSize: 18)),
+              title: const Text(
+                'Monthly Spending',
+                style: TextStyle(fontSize: 18),
+              ),
               subtitle: Column(
                 children: [
                   LinearProgressIndicator(
                     value: budgetProgress,
                     semanticsLabel: 'Spending Summary',
-                    color: Colors.green,
+                    color: isOverBudget ? Colors.red : Colors.green,
                     backgroundColor: Colors.blueGrey,
                   ),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '\$$amountSpent Spent',
-                        style: TextStyle(color: Colors.blueGrey),
+                        '\$${amountSpent.toStringAsFixed(2)} Spent',
+                        style: const TextStyle(color: Colors.blueGrey),
                       ),
                       Text(
-                        '\$${monthlyBudget - amountSpent} Remaining',
-                        style: TextStyle(color: Colors.blueGrey),
+                        isOverBudget
+                            ? '\$${remaining.abs().toStringAsFixed(2)} Over Budget'
+                            : '\$${remaining.toStringAsFixed(2)} Remaining',
+                        style: TextStyle(
+                          color: isOverBudget ? Colors.red : Colors.blueGrey,
+                        ),
                       ),
                     ],
                   ),
+                  // Show budget total if set
+                  if (monthlyBudget > 0)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Budget: \$${monthlyBudget.toStringAsFixed(2)}/mo',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.blueGrey,
+                        ),
+                      ),
+                    ),
+                  if (monthlyBudget == 0)
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'No budget set — complete your profile to set one',
+                        style: TextStyle(fontSize: 12, color: Colors.blueGrey),
+                      ),
+                    ),
                 ],
               ),
             ),
+
 
             // SPENDING SUMMARY
             Card(
