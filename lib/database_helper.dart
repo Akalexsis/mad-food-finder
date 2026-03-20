@@ -3,6 +3,7 @@ import 'package:path/path.dart';
 import '../models/food_model.dart';
 import '../models/review_model.dart';
 import '../models/meal_model.dart';
+import '../data/food_data.dart'; // seed data
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -28,7 +29,6 @@ class DatabaseHelper {
     );
   }
 
-  // Handle database upgrades
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
       await db.execute('''
@@ -95,6 +95,11 @@ class DatabaseHelper {
         updated_at TEXT NOT NULL
       )
     ''');
+
+    // Seed food spots from food_data.dart
+    for (final spot in sampleSpots) {
+      await db.insert('food_spots', spot.toMap());
+    }
   }
 
   // FOOD SPOT OPERATIONS
@@ -304,8 +309,56 @@ class DatabaseHelper {
     }
   }
 
+  // BUDGET OPERATIONS
+  Future<int> setMonthlyBudget(double budget) async {
+    final db = await instance.database;
+    final now = DateTime.now().toIso8601String();
 
-  
+    final existing = await db.query('budget', limit: 1);
+
+    if (existing.isEmpty) {
+      return await db.insert('budget', {
+        'monthly_budget': budget,
+        'updated_at': now,
+      });
+    } else {
+      return await db.update(
+        'budget',
+        {'monthly_budget': budget, 'updated_at': now},
+        where: 'id = ?',
+        whereArgs: [existing.first['id']],
+      );
+    }
+  }
+
+  Future<double?> getMonthlyBudget() async {
+    final db = await instance.database;
+    final result = await db.query('budget', limit: 1);
+    if (result.isEmpty) return null;
+    return (result.first['monthly_budget'] as num?)?.toDouble();
+  }
+
+  Future<double> getRemainingBudget() async {
+    final budget = await getMonthlyBudget();
+    if (budget == null) return 0.0;
+    final spent = await getMonthlySpending();
+    return budget - spent;
+  }
+
+  Future<Map<String, double>> getBudgetSummary() async {
+    final budget = await getMonthlyBudget() ?? 0.0;
+    final spent = await getMonthlySpending();
+    final remaining = budget - spent;
+    final percentage = budget > 0 ? (spent / budget) * 100 : 0.0;
+
+    return {
+      'budget': budget,
+      'spent': spent,
+      'remaining': remaining,
+      'percentage': percentage,
+    };
+  }
+
   Future close() async {
     final db = await instance.database;
     db.close();

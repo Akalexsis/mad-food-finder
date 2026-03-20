@@ -5,7 +5,9 @@
 import 'package:flutter/material.dart';
 import '../../models/meal_model.dart';
 import '../../ui/mealLogUi.dart';
-import '../../data/meal_data.dart'; // DELETE - FOR TESTING ONLY
+import '../../database_helper.dart';
+import '/shared_preference_helper.dart';
+
 
 class BudgetScreen extends StatefulWidget{
   const BudgetScreen({super.key});
@@ -16,26 +18,46 @@ class BudgetScreen extends StatefulWidget{
 
 class _BudgetScreenState extends State<BudgetScreen> {
   // BUDGET RELATED VARIABLES
-  double budgetProgress = 0.0; // tracks amount spent (for progress bar)
-  double amountSpent = 60.0; // tracks amount spent by user
-  double monthlyBudget = 500.0; // monthly budget amount set by user
-  late final List<MealModel> weekLogs; // store all logs for this week
+    double budgetProgress = 0.0;
+  double amountSpent = 0.0;
+  double monthlyBudget = 0.0;
+  List<MealModel> monthLogs = [];
+  bool isLoading = true;
+
 
   // SUMMARY RELATED VARIABLES
-  
-  // TO-DO - GET THIS WEEK'S MEALS
+  Future<void> _loadBudgetData() async {
+    // Load budget from SharedPreferences (set during questionnaire)
+    final budgetString = await SharedPreferencesHelper.getMonthlyBudget();
+    final parsedBudget = double.tryParse(budgetString) ?? 0.0;
+
+    // Load monthly spending and logs from database
+    final spent = await DatabaseHelper.instance.getMonthlySpending();
+    final logs = await DatabaseHelper.instance.getMealsThisMonth();
+
+    setState(() {
+      monthlyBudget = parsedBudget;
+      amountSpent = spent;
+      monthLogs = logs;
+      budgetProgress = monthlyBudget > 0
+          ? (amountSpent / monthlyBudget).clamp(0.0, 1.0)
+          : 0.0;
+      isLoading = false;
+    });
+  }
+
 
   // TO-DO - Calculate how much the user has spent this month
 
   // Update budgetProgress to reflect how much user has spent and how much remains
-  void getBudget() {
-    setState(() => 
-      budgetProgress = amountSpent / monthlyBudget
-    );
-  }
-  
+ 
   @override
   Widget build(BuildContext context) {
+     if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator(color: Colors.green)),
+      );
+    }
     return Scaffold(
       body: SingleChildScrollView( // make entire page scrollable
         child: Column(
