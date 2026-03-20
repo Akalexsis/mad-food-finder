@@ -24,26 +24,63 @@ class _AddLogScreenState extends State<AddLogScreen> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _costController = TextEditingController();
 
+    
+  // Form validation key
+  final _formKey = GlobalKey<FormState>();
+
+
   // ensure inputs are correct data type and fields aren't empty
-  void _validateForm() {
-    print('added spot');
+ // Validate form inputs
+  bool _validateForm() {
+    if (_formKey.currentState?.validate() ?? false) {
+      return true;
+    }
+    return false;
   }
 
-  // add new meal log to database and clear form
-  void _addLogSpot() {
-    _validateForm();
+  // Add new meal log to database and clear form
+  Future<void> _addLogSpot() async {
+    if (!_validateForm()) {
+      return;
+    }
 
-    // read the current name from the controller
-    String name = _nameController.text;
+    try {
+      // Parse cost
+      double cost = double.tryParse(_costController.text) ?? 0.0;
+      
+      // Create new meal model
+      final newMeal = MealModel(
+        name: _nameController.text.trim(),
+        desc: _descController.text.trim(),
+        date: _dateController.text,
+        cost: cost,
+      );
 
-    final confirm = SnackBar(content: Text('$name log has been added'));
-    ScaffoldMessenger.of(context).showSnackBar(confirm);
+      // Insert into database
+      await DatabaseHelper.instance.insertMeal(newMeal);
 
-    // reset form
-    _resetForm();
+      // Show confirmation
+      String name = _nameController.text.trim();
+      final confirm = SnackBar(
+        content: Text('$name log has been added'),
+        backgroundColor: Colors.green,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(confirm);
 
-    // route back to meal log page
-    Navigator.pop(context);
+      // Reset form
+      _resetForm();
+
+      // Return true to indicate success and go back
+      Navigator.pop(context, true);
+    } catch (e) {
+      // Show error message
+      final errorSnackbar = SnackBar(
+        content: Text('Error adding log: $e'),
+        backgroundColor: Colors.red,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(errorSnackbar);
+      print('Error adding meal log: $e');
+    }
   }
 
   // clear form after successfully submitting form
