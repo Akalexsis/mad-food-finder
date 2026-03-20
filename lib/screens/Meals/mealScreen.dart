@@ -25,9 +25,30 @@ class _MealScreenState extends State<MealScreen> {
   late final List<MealModel> pastLogs;
   bool _isLoading = true;
 
-  void initState(){
+  @override
+  void initState() {
     super.initState();
-    // call get meals method
+    _loadMeals();  // CHANGE THIS LINE
+  }
+
+  // ADD THIS METHOD
+  Future<void> _loadMeals() async {
+    setState(() => _isLoading = true);
+    try {
+      final week = await _databaseHelper.getMealsThisWeek();
+      final month = await _databaseHelper.getMealsThisMonth();
+      final past = await _databaseHelper.getAllMeals();
+      
+      setState(() {
+        weekLogs = week;
+        monthLogs = month;
+        pastLogs = past;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error loading meals: $e');
+      setState(() => _isLoading = false);
+    }
   }
 
   // TO-DO get all meals by week, month, and all past and
