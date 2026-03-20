@@ -16,14 +16,18 @@ class BudgetScreen extends StatefulWidget {
 }
 
 class _BudgetScreenState extends State<BudgetScreen> {
-  // BUDGET RELATED VARIABLES
   double budgetProgress = 0.0;
   double amountSpent = 0.0;
   double monthlyBudget = 0.0;
   List<MealModel> monthLogs = [];
   bool isLoading = true;
 
-  // SUMMARY RELATED VARIABLES
+  @override
+  void initState() {
+    super.initState();
+    _loadBudgetData();
+  }
+
   Future<void> _loadBudgetData() async {
     // Load budget from SharedPreferences (set during questionnaire)
     final budgetString = await SharedPreferencesHelper.getMonthlyBudget();
@@ -73,15 +77,15 @@ class _BudgetScreenState extends State<BudgetScreen> {
         body: Center(child: CircularProgressIndicator(color: Colors.green)),
       );
     }
-      final remaining = monthlyBudget - amountSpent;
+
+    final remaining = monthlyBudget - amountSpent;
     final isOverBudget = remaining < 0;
 
     return Scaffold(
       body: SingleChildScrollView(
-        // make entire page scrollable
-       child: Column(
+        child: Column(
           children: [
-            // Progress bar showing monthly remaining based on budget amount specified in rpeferences
+            // Progress bar
             ListTile(
               title: const Text(
                 'Monthly Spending',
@@ -136,8 +140,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
               ),
             ),
 
-
-             // Spending summary card
+            // Spending summary card
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
