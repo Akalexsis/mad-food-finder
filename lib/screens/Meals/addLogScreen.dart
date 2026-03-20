@@ -8,8 +8,6 @@ import '/database_helper.dart';
 import '/models/meal_model.dart';
 import 'package:intl/intl.dart'; // For date formatting
 
-
-
 class AddLogScreen extends StatefulWidget {
   const AddLogScreen({super.key});
 
@@ -24,13 +22,44 @@ class _AddLogScreenState extends State<AddLogScreen> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _costController = TextEditingController();
 
-    
   // Form validation key
   final _formKey = GlobalKey<FormState>();
 
+  // Selected date
+  DateTime? _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    // Set today's date as default
+    _selectedDate = DateTime.now();
+    _dateController.text = _formatDate(_selectedDate!);
+  }
+
+  // Format date to match "Mar 16, 2026" format
+  String _formatDate(DateTime date) {
+    return DateFormat('MMM d, yyyy').format(date);
+  }
+
+  // Show date picker
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+    );
+
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+        _dateController.text = _formatDate(picked);
+      });
+    }
+  }
 
   // ensure inputs are correct data type and fields aren't empty
- // Validate form inputs
+  // Validate form inputs
   bool _validateForm() {
     if (_formKey.currentState?.validate() ?? false) {
       return true;
@@ -47,7 +76,7 @@ class _AddLogScreenState extends State<AddLogScreen> {
     try {
       // Parse cost
       double cost = double.tryParse(_costController.text) ?? 0.0;
-      
+
       // Create new meal model
       final newMeal = MealModel(
         name: _nameController.text.trim(),
@@ -83,13 +112,14 @@ class _AddLogScreenState extends State<AddLogScreen> {
     }
   }
 
-  // clear form after successfully submitting form
+  // Clear form after successfully submitting form
   void _resetForm() {
-     setState(() {
+    setState(() {
       _nameController.clear();
       _descController.clear();
-      _dateController.clear();
       _costController.clear();
+      _selectedDate = DateTime.now();
+      _dateController.text = _formatDate(_selectedDate!);
     });
   }
 
@@ -106,51 +136,74 @@ class _AddLogScreenState extends State<AddLogScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Column( children: [
-        Text('New Meal Log', style: TextStyle( fontSize: 24 ), textAlign: TextAlign.center ),
-
-        // accept all input
-        Text('Name', style: TextStyle( fontSize: 18 ), textAlign: TextAlign.start),
-        TextField(
-          controller: _nameController,
-          decoration: InputDecoration(
-            labelText: 'Log Name'
+      body: Column(
+        children: [
+          Text(
+            'New Meal Log',
+            style: TextStyle(fontSize: 24),
+            textAlign: TextAlign.center,
           ),
-        ),
-        SizedBox(height: 20,),
 
-        Text('Description', style: TextStyle( fontSize: 18 ), textAlign: TextAlign.start),
-        TextField(
-          controller: _descController,
-          decoration: InputDecoration(
-            labelText: 'I ordered ... '
+          // accept all input
+          Text(
+            'Name',
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.start,
           ),
-        ),
+          TextField(
+            controller: _nameController,
+            decoration: InputDecoration(labelText: 'Log Name'),
+          ),
+          SizedBox(height: 20),
 
-        Text('date', style: TextStyle( fontSize: 18 ), textAlign: TextAlign.start),
-        TextField(
-          controller: _dateController,
-          decoration: InputDecoration(
-            labelText: 'Mar 16, 2026'
+          Text(
+            'Description',
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.start,
           ),
-        ),
-        SizedBox(height: 20,),
-        
-        Text('Cost', style: TextStyle( fontSize: 18 ), textAlign: TextAlign.start),
-        TextField(
-          controller: _costController,
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'[\d\.]')) // allow decimal values
-          ],
-          keyboardType: TextInputType.numberWithOptions( decimal: true ), // accept double int values from users
-          decoration: InputDecoration(
-            labelText: 'I spent ...'
+          TextField(
+            controller: _descController,
+            decoration: InputDecoration(labelText: 'I ordered ... '),
           ),
-        ),
-        SizedBox(height: 20,),
 
-        ElevatedButton(onPressed: () { _addLogSpot(); }, child: Text('Submit'))
-      ])
+          Text(
+            'date',
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.start,
+          ),
+          TextField(
+            controller: _dateController,
+            decoration: InputDecoration(labelText: 'Mar 16, 2026'),
+          ),
+          SizedBox(height: 20),
+
+          Text(
+            'Cost',
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.start,
+          ),
+          TextField(
+            controller: _costController,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                RegExp(r'[\d\.]'),
+              ), // allow decimal values
+            ],
+            keyboardType: TextInputType.numberWithOptions(
+              decimal: true,
+            ), // accept double int values from users
+            decoration: InputDecoration(labelText: 'I spent ...'),
+          ),
+          SizedBox(height: 20),
+
+          ElevatedButton(
+            onPressed: () {
+              _addLogSpot();
+            },
+            child: Text('Submit'),
+          ),
+        ],
+      ),
     );
   }
 }
