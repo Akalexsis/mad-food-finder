@@ -53,10 +53,12 @@ class _MealScreenState extends State<MealScreen> {
 
   // TO-DO get all meals by week, month, and all past and
 
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView( // make page scrollable
+      body: _isLoading  // loading screen check
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView( //makes it scrollable
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
