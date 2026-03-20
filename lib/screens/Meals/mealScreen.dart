@@ -3,6 +3,7 @@
   Purpose - Render all meal logs
  */
 import 'package:flutter/material.dart';
+import 'package:mad_food_finder/database_helper.dart';
 import '../../models/meal_model.dart';
 import '../../data/meal_data.dart'; // FOR TESTING ONLY
 import 'addLogScreen.dart';
@@ -16,10 +17,13 @@ class MealScreen extends StatefulWidget {
 }
 
 class _MealScreenState extends State<MealScreen> {
+  final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
+
   // TO-DO store meals by week, month, and all past
   late final List<MealModel> weekLogs;
   late final List<MealModel> monthLogs;
   late final List<MealModel> pastLogs;
+  bool _isLoading = true;
 
   void initState(){
     super.initState();
