@@ -1,7 +1,3 @@
-/* 
-  Author - Kayla Thornton
-  Purpose - Render list of food spots and route users to Foods screen so they can view more Foods
- */
 import 'package:flutter/material.dart';
 import 'detailScreen.dart';
 import 'addFoodScreen.dart';
@@ -16,6 +12,7 @@ class FoodScreen extends StatefulWidget {
 }
 
 class _FoodScreenState extends State<FoodScreen> {
+  // ── Filter state ──────────────────────────────────────────────────────────
   String _selectedCuisine = 'All';
   bool _favoritesOnly = false;
   String _selectedHours = 'All';
@@ -23,16 +20,8 @@ class _FoodScreenState extends State<FoodScreen> {
   bool _isLoading = true;
 
   final List<String> _cuisineOptions = [
-    'All',
-    'American',
-    'Italian',
-    'Mexican',
-    'Asian',
-    'Mediterranean',
-    'Fast Food',
-    'Seafood',
-    'Vegan / Plant-based',
-    'Cafe',
+    'All', 'American', 'Italian', 'Mexican', 'Asian',
+    'Mediterranean', 'Fast Food', 'Seafood', 'Vegan / Plant-based', 'Cafe',
   ];
 
   final List<String> _hoursOptions = ['All', 'Open Early', 'Open Late'];
@@ -42,8 +31,6 @@ class _FoodScreenState extends State<FoodScreen> {
     super.initState();
     _loadSpots();
   }
-
-  // get entries by filter
 
   Future<void> _loadSpots() async {
     final spots = await DatabaseHelper.instance.getAllFoodSpots();
@@ -58,7 +45,6 @@ class _FoodScreenState extends State<FoodScreen> {
     await _loadSpots();
   }
 
-  //filtering logic
   List<FoodSpot> get _filteredSpots {
     return _allSpots.where((spot) {
       if (_selectedCuisine != 'All' && spot.cuisine != _selectedCuisine) return false;
@@ -96,10 +82,10 @@ class _FoodScreenState extends State<FoodScreen> {
 
     return Scaffold(
       body: Column(
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start, //CHANGED FROM MainAxisSize: MAS.min
         children: [
-          // FILTERS
-         // ── Filter chips ──────────────────────────────────────────────────
+
+          // ── Filter chips ──────────────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             child: SingleChildScrollView(
@@ -146,7 +132,7 @@ class _FoodScreenState extends State<FoodScreen> {
             ),
           ),
 
-           // ── Results count ─────────────────────────────────────────────────
+          // ── Results count ─────────────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
@@ -154,8 +140,6 @@ class _FoodScreenState extends State<FoodScreen> {
               style: const TextStyle(color: Colors.blueGrey, fontSize: 12),
             ),
           ),
-
-
 
           // ── Food spot list ────────────────────────────────────────────────
           Expanded(
