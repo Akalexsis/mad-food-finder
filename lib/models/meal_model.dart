@@ -19,7 +19,7 @@ class MealModel {
   });
 
   // map object fields to columns for database use
-  Map toMap(){
+  Map<String, dynamic> toMap(){
     return {
       'id': id,
       'name': name,
@@ -30,7 +30,7 @@ class MealModel {
   }
 
   // map database records to dart object for code use
-  factory MealModel.fromMap(Map map){
+  factory MealModel.fromMap(Map<String, dynamic> map){
     return MealModel(
     id : map['id'],
     name : map['name'],

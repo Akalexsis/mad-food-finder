@@ -11,6 +11,8 @@ class FoodSpot {
   final String cuisine;
   final bool isFavorite; 
 
+  //final String? menuUrl; for food spot details page
+
   FoodSpot({ 
     this.id, 
     required this.name,
@@ -39,11 +41,11 @@ class FoodSpot {
     return FoodSpot(
       id: map['id'],
       name: map['name'], 
-      imageUrl: map['imageUrl'], 
+      imageUrl: map['image'], 
       hours: map['hours'], 
       cost: map['cost'], 
       cuisine: map['cuisine'],
-      isFavorite: map['isFavorite']
+      isFavorite: map['favorite'] ==1
     ); 
   }
   
