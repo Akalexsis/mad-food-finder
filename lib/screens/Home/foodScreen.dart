@@ -99,21 +99,63 @@ class _FoodScreenState extends State<FoodScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           // FILTERS
-          Row(
-            children: [
-              Text('Filters'),
-              // dropdown options by cuisine, favorite, and maybe hours
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddFoodScreen()),
-                  );
-                },
-                child: Text('Add Food Spot'),
+         // ── Filter chips ──────────────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: FilterChip(
+                      label: const Text('Favorites'),
+                      selected: _favoritesOnly,
+                      onSelected: (val) => setState(() => _favoritesOnly = val),
+                      selectedColor: Colors.green.shade100,
+                      checkmarkColor: Colors.green.shade800,
+                      avatar: const Icon(Icons.favorite, size: 16, color: Colors.red),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: DropdownButton<String>(
+                      value: _selectedCuisine,
+                      underline: const SizedBox(),
+                      icon: const Icon(Icons.restaurant_menu, size: 18),
+                      items: _cuisineOptions.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+                      onChanged: (val) => setState(() => _selectedCuisine = val!),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: DropdownButton<String>(
+                      value: _selectedHours,
+                      underline: const SizedBox(),
+                      icon: const Icon(Icons.access_time, size: 18),
+                      items: _hoursOptions.map((h) => DropdownMenuItem(value: h, child: Text(h))).toList(),
+                      onChanged: (val) => setState(() => _selectedHours = val!),
+                    ),
+                  ),
+
+                ],
               ),
-            ],
+            ),
           ),
+
+           // ── Results count ─────────────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              '${spots.length} spot${spots.length == 1 ? '' : 's'}',
+              style: const TextStyle(color: Colors.blueGrey, fontSize: 12),
+            ),
+          ),
+
+
 
           // FOOD SPOT LIST: Render each food spot as a clickable card
           Expanded(
