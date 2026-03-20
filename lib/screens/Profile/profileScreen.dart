@@ -4,8 +4,8 @@
             Allows users to retake the questionnaire at any time.
  */
 import 'package:flutter/material.dart';
-import '/shared_preference_helper.dart';
-import '/screens/Profile/questionnaire_screen.dart';
+import '/shared_preferences_helper.dart';
+import '/screens/Profile/questionnaireScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
