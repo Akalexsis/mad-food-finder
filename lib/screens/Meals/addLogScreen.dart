@@ -4,6 +4,10 @@
  */
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '/database_helper.dart';
+import '/models/meal_model.dart';
+import 'package:intl/intl.dart'; // For date formatting
+
 
 
 class AddLogScreen extends StatefulWidget {
