@@ -137,34 +137,84 @@ class _BudgetScreenState extends State<BudgetScreen> {
             ),
 
 
-            // SPENDING SUMMARY
+             // Spending summary card
             Card(
-              child: Column(
-                children: [
-                  Text('Spending Summary: ', style: TextStyle(fontSize: 24)),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Spending Summary',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    const SizedBox(height: 12),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Most Visited:'), Text('Moes')],
-                  ),
+                    Builder(
+                      builder: (context) {
+                        final mostSpent = _getMostSpent();
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Most Visited:'), Text('Moes')],
-                  ),
+                        if (mostSpent == null) {
+                          return const Text(
+                            'No meals logged this month yet.',
+                            style: TextStyle(color: Colors.blueGrey),
+                          );
+                        }
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [Text('Most Visited:'), Text('Moes')],
-                  ),
-                ],
+                        final totalAtSpot = _getTotalSpentAt(mostSpent.name);
+
+                        return Row(
+                          children: [
+                            Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.restaurant,
+                                color: Colors.blueGrey,
+                                size: 36,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Most Spent',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.blueGrey,
+                                  ),
+                                ),
+                                Text(
+                                  mostSpent.name,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  '\$${totalAtSpot.toStringAsFixed(2)} spent this month',
+                                  style: const TextStyle(color: Colors.green),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
 
-            // Display this week's logs only
-            sampleLogs.isEmpty
-                ? Text('No meals tracked for this week')
-                : MealLogUi(mealLogs: sampleLogs, header: "This week's Logs"),
+            // This month's meal logs
+            monthLogs.isEmpty
+                ? const Text('No meals tracked for this month')
+                : MealLogUi(mealLogs: monthLogs, header: "This Month's Logs"),
           ],
         ),
       ),
