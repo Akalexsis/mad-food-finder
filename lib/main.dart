@@ -94,7 +94,7 @@ class MainApp extends StatelessWidget {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Food Finder'),
+          title: const Text('GSU Budget Bites'),
           actions: [
             // Add theme toggle button in app bar
             FutureBuilder<bool>(
