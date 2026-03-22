@@ -1,49 +1,50 @@
 /*
   Author - Kayla Thornton
-  Purpose - 8-question stepper questionnaire that saves answers to SharedPreferences.
+  Purpose - 5-question stepper questionnaire that saves answers to SharedPreferences.
             Launches on first open; re-accessible from Profile tab at any time.
+            Users can skip and use a default profile.
  */
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '/shared_preferences_helper.dart';
+import '/shared_preference_helper.dart';
 
 class QuestionnaireScreen extends StatefulWidget {
   // fromProfile = true  → show a back button (opened from Profile)
   // fromProfile = false → no back button (first-launch onboarding)
   final bool fromProfile;
   const QuestionnaireScreen({super.key, this.fromProfile = false});
-  
 
   @override
   _QuestionnaireScreenState createState() => _QuestionnaireScreenState();
 }
 
 class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
-  
   int _currentStep = 0;
-  final TextEditingController _budgetController = TextEditingController();  
+  final TextEditingController _budgetController = TextEditingController();
+
   // ─── Answer state ────────────────────────────────────────────────────────
   final List<String> _selectedCuisines = [];
   final List<String> _selectedDietary = [];
   final List<String> _selectedAllergies = [];
   String _selectedBudget = '';
-  String _selectedMealFrequency = '';
-  String _selectedClassSchedule = '';
   final List<String> _selectedBusiestDays = [];
-  String _selectedDiningGoal = '';
 
-  // ─── Question Answers
+  // ─── Question options ────────────────────────────────────────────────────
   final List<String> _cuisineOptions = [
     'American',
     'Italian',
     'Mexican',
     'Asian',
+    'Chinese',
+    'Japanese',
     'Mediterranean',
     'Fast Food',
     'Seafood',
     'Vegan / Plant-based',
+    'Cafe',
     'Other',
   ];
+
   final List<String> _dietaryOptions = [
     'None',
     'Vegetarian',
@@ -54,6 +55,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     'Dairy-Free',
     'Low-Carb',
   ];
+
   final List<String> _allergyOptions = [
     'None',
     'Peanuts',
@@ -66,27 +68,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     'Soy',
     'Sesame',
   ];
-  final List<String> _budgetOptions = [
-    'Under \$25/mo',
-    '\$25–\$50/mo',
-    '\$50–\$100/mo',
-    '\$100–\$200/mo',
-    '\$200+/mo',
-  ];
-  final List<String> _frequencyOptions = [
-    'Daily',
-    '4–6 times/week',
-    '2–3 times/week',
-    'Once a week',
-    'Less than once a week',
-  ];
-  final List<String> _scheduleOptions = [
-    'MWF (Mon/Wed/Fri)',
-    'TTh (Tue/Thu)',
-    'MWF + TTh',
-    'Online / Flexible',
-    'Not currently enrolled',
-  ];
+
   final List<String> _dayOptions = [
     'Monday',
     'Tuesday',
@@ -96,15 +78,8 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     'Saturday',
     'Sunday',
   ];
-  final List<String> _goalOptions = [
-    'Save money',
-    'Try new places',
-    'Eat healthier',
-    'Quick meals between classes',
-    'Explore local spots',
-  ];
 
-  // ─── Helpers
+  // ─── Helpers ─────────────────────────────────────────────────────────────
 
   // Toggle item in a multi-select list
   void _toggle(List<String> list, String value) {
@@ -125,15 +100,59 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         return _selectedBudget.isNotEmpty &&
             double.tryParse(_selectedBudget) != null;
       case 4:
-        return _selectedMealFrequency.isNotEmpty;
-      case 5:
-        return _selectedClassSchedule.isNotEmpty;
-      case 6:
         return _selectedBusiestDays.isNotEmpty;
-      case 7:
-        return _selectedDiningGoal.isNotEmpty;
       default:
         return false;
+    }
+  }
+
+  // ← NEW: Save default profile when user skips
+  Future<void> _saveDefaultProfile() async {
+    await SharedPreferencesHelper.saveAllAnswers(
+      cuisines: ['American', 'Fast Food', 'Asian'], // Popular choices
+      dietaryRestrictions: ['None'],
+      allergies: ['None'],
+      monthlyBudget: '100', // Average student budget
+      busiestDays: ['Monday', 'Wednesday', 'Friday'], // Typical MWF schedule
+    );
+
+    if (!mounted) return;
+
+    if (widget.fromProfile) {
+      Navigator.pop(context);
+    } else {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+  }
+
+  // ← NEW: Show skip confirmation dialog
+  Future<void> _confirmSkip() async {
+    final shouldSkip = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Skip Setup?'),
+        content: const Text(
+          'We\'ll set up a default profile for you. You can always update your preferences later in the Profile tab.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Skip'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldSkip == true) {
+      _saveDefaultProfile();
     }
   }
 
@@ -143,19 +162,14 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
       dietaryRestrictions: _selectedDietary,
       allergies: _selectedAllergies,
       monthlyBudget: _selectedBudget,
-      mealFrequency: _selectedMealFrequency,
-      classSchedule: _selectedClassSchedule,
       busiestDays: _selectedBusiestDays,
-      diningGoal: _selectedDiningGoal,
     );
 
     if (!mounted) return;
 
     if (widget.fromProfile) {
-      // Return to Profile tab
       Navigator.pop(context);
     } else {
-      // First-launch: replace questionnaire with main app
       Navigator.pushReplacementNamed(context, '/home');
     }
   }
@@ -178,24 +192,6 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
             color: isSelected ? Colors.green.shade800 : Colors.black87,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
           ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildRadioGroup(
-    List<String> options,
-    String current,
-    ValueChanged<String> onChanged,
-  ) {
-    return Column(
-      children: options.map((option) {
-        return RadioListTile<String>(
-          title: Text(option),
-          value: option,
-          groupValue: current,
-          activeColor: Colors.green,
-          onChanged: (val) => onChanged(val!),
         );
       }).toList(),
     );
@@ -254,7 +250,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
             ),
             const SizedBox(height: 4),
             const Text(
-              'We\'ll warn you when a spot may not be safe.',
+              'We\'ll warn you when a restaurant may not be safe.',
               style: TextStyle(fontSize: 13, color: Colors.blueGrey),
             ),
             const SizedBox(height: 12),
@@ -295,55 +291,11 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         ),
       ),
 
-      // ── Step 5 ── Meal frequency
-      Step(
-        title: const Text('How Often You Eat Out'),
-        isActive: _currentStep >= 4,
-        state: _currentStep > 4 ? StepState.complete : StepState.indexed,
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'How often do you eat out or grab food on campus?',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            _buildRadioGroup(
-              _frequencyOptions,
-              _selectedMealFrequency,
-              (val) => setState(() => _selectedMealFrequency = val),
-            ),
-          ],
-        ),
-      ),
-
-      // ── Step 6 ── Class schedule
-      Step(
-        title: const Text('Class Schedule'),
-        isActive: _currentStep >= 5,
-        state: _currentStep > 5 ? StepState.complete : StepState.indexed,
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'What does your class schedule look like?',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            _buildRadioGroup(
-              _scheduleOptions,
-              _selectedClassSchedule,
-              (val) => setState(() => _selectedClassSchedule = val),
-            ),
-          ],
-        ),
-      ),
-
-      // ── Step 7 ── Busiest days
+      // ── Step 5 ── Busiest days
       Step(
         title: const Text('Busiest Days'),
-        isActive: _currentStep >= 6,
-        state: _currentStep > 6 ? StepState.complete : StepState.indexed,
+        isActive: _currentStep >= 4,
+        state: _currentStep > 4 ? StepState.complete : StepState.indexed,
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -353,28 +305,6 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
             ),
             const SizedBox(height: 12),
             _buildChipGroup(_dayOptions, _selectedBusiestDays),
-          ],
-        ),
-      ),
-
-      // ── Step 8 ── Dining goal
-      Step(
-        title: const Text('Dining Goal'),
-        isActive: _currentStep >= 7,
-        state: _currentStep > 7 ? StepState.complete : StepState.indexed,
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'What\'s your main goal when using Food Finder?',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            _buildRadioGroup(
-              _goalOptions,
-              _selectedDiningGoal,
-              (val) => setState(() => _selectedDiningGoal = val),
-            ),
           ],
         ),
       ),
@@ -388,8 +318,21 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         title: const Text('Your Food Profile'),
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
-        automaticallyImplyLeading:
-            widget.fromProfile, // back btn only from Profile
+        automaticallyImplyLeading: widget.fromProfile,
+        // ← NEW: Skip button in AppBar
+        actions: [
+          TextButton(
+            onPressed: _confirmSkip,
+            child: const Text(
+              'Skip',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -399,13 +342,13 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
             child: Row(
               children: [
                 Text(
-                  'Step ${_currentStep + 1} of 8',
+                  'Step ${_currentStep + 1} of 5',
                   style: const TextStyle(color: Colors.blueGrey, fontSize: 13),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: LinearProgressIndicator(
-                    value: (_currentStep + 1) / 8,
+                    value: (_currentStep + 1) / 5,
                     backgroundColor: Colors.grey.shade200,
                     color: Colors.green,
                     minHeight: 6,
@@ -421,7 +364,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
               currentStep: _currentStep,
               onStepTapped: (step) => setState(() => _currentStep = step),
               controlsBuilder: (context, details) {
-                final isLast = _currentStep == 7;
+                final isLast = _currentStep == 4;
                 return Padding(
                   padding: const EdgeInsets.only(top: 16),
                   child: Row(
@@ -439,7 +382,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                                   setState(() => _currentStep++);
                                 }
                               }
-                            : null, // disabled until step is answered
+                            : null,
                         child: Text(isLast ? 'Finish' : 'Next'),
                       ),
                       if (_currentStep > 0) ...[
