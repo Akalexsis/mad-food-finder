@@ -16,11 +16,11 @@ class MealScreen extends StatefulWidget {
 }
 
 class _MealScreenState extends State<MealScreen> {
-  final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
-
-  List<MealModel> weekLogs = [];    // CHANGED: removed late final
-  List<MealModel> monthLogs = [];   // CHANGED: removed late final
-  List<MealModel> pastLogs = [];    // CHANGED: removed late final
+  final DatabaseHelper _dbHelper = DatabaseHelper.instance;
+  
+  List<MealModel> weekLogs = [];
+  List<MealModel> monthLogs = [];
+  List<MealModel> pastLogs = [];
   bool _isLoading = true;
 
   @override
@@ -31,11 +31,15 @@ class _MealScreenState extends State<MealScreen> {
 
   Future<void> _loadMeals() async {
     setState(() => _isLoading = true);
+    
     try {
-      final week = await _databaseHelper.getMealsThisWeek();
-      final month = await _databaseHelper.getMealsThisMonth();
-      final past = await _databaseHelper.getAllMeals();
-
+      final week = await _dbHelper.getMealsThisWeek();
+      final month = await _dbHelper.getMealsThisMonth();
+      final past = await _dbHelper.getAllMeals();
+      
+      //  MOUNTED CHECK: Only update state if widget is still mounted
+      if (!mounted) return;
+      
       setState(() {
         weekLogs = week;
         monthLogs = month;
@@ -44,6 +48,10 @@ class _MealScreenState extends State<MealScreen> {
       });
     } catch (e) {
       print('Error loading meals: $e');
+      
+      // MOUNTED CHECK: Only update state if widget is still mounted
+      if (!mounted) return;
+      
       setState(() => _isLoading = false);
     }
   }
@@ -58,44 +66,42 @@ class _MealScreenState extends State<MealScreen> {
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : RefreshIndicator(                              // CHANGE 5: Added RefreshIndicator
+          : RefreshIndicator(
               onRefresh: _loadMeals,
               child: SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),  // CHANGE 5: Added physics
+                physics: AlwaysScrollableScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(                                // CHANGE 6: Added Padding
+                    Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                        onPressed: () async {               // CHANGE 6: Made async
+                        onPressed: () async {
                           await Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => AddLogScreen()),
                           );
-                          _loadMeals();                     // CHANGE 6: Refresh after adding
+                          
+                          //  MOUNTED CHECK: Only reload if widget is still mounted after navigation
+                          if (!mounted) return;
+                          
+                          _loadMeals(); // refresh after returning from add screen
                         },
                         child: Text('New Log'),
                       ),
                     ),
-
-                    // CHANGE 7: Replace sampleLogs with weekLogs
                     weekLogs.isEmpty
                         ? Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text('No logs tracked for this week'),
                           )
                         : MealLogUi(mealLogs: weekLogs, header: 'This Week'),
-
-                    // CHANGE 7: Replace sampleLogs with monthLogs
                     monthLogs.isEmpty
                         ? Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text('No logs tracked for this month'),
                           )
                         : MealLogUi(mealLogs: monthLogs, header: 'This Month'),
-
-                    // CHANGE 7: Replace sampleLogs with pastLogs
                     pastLogs.isEmpty
                         ? Padding(
                             padding: const EdgeInsets.all(8.0),
