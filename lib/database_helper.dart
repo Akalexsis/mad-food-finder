@@ -4,6 +4,7 @@ import '../models/food_model.dart';
 import '../models/review_model.dart';
 import '../models/meal_model.dart';
 import '../data/food_data.dart'; // seed data
+import '../data/review_data.dart'; //seed data
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -23,14 +24,14 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 1,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 2) {
+    if (oldVersion < 1) {
       await db.execute('''
         CREATE TABLE IF NOT EXISTS meals(
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,16 +55,18 @@ class DatabaseHelper {
   Future _createDB(Database db, int version) async {
     // FOOD SPOT table
     await db.execute('''
-      CREATE TABLE food_spots(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        image TEXT NOT NULL,
-        hours TEXT NOT NULL,
-        cost INTEGER NOT NULL,
-        cuisine TEXT NOT NULL,
-        favorite INTEGER NOT NULL DEFAULT 0     
-      )
-    ''');
+    CREATE TABLE food_spots(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      image TEXT NOT NULL,
+      hours TEXT NOT NULL,
+      cost INTEGER NOT NULL,
+      cuisine TEXT NOT NULL,
+      favorite INTEGER NOT NULL DEFAULT 0,
+      potential_allergens TEXT DEFAULT '',     --  comma-separated allergens
+      menu_url TEXT                             -- optional menu link
+    )
+  ''');
 
     // REVIEW table
     await db.execute('''
@@ -76,16 +79,19 @@ class DatabaseHelper {
         FOREIGN KEY (foodId) REFERENCES food_spots (id) ON DELETE CASCADE)
     ''');
 
-    // MEAL table
+    // UPDATED MEAL table
     await db.execute('''
-      CREATE TABLE meals(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        cost REAL NOT NULL,
-        desc TEXT NOT NULL,
-        date TEXT NOT NULL
-      )
-    ''');
+    CREATE TABLE meals(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      cost REAL NOT NULL,
+      desc TEXT NOT NULL,
+      date TEXT NOT NULL,
+      foodSpotId INTEGER,
+      FOREIGN KEY (foodSpotId) REFERENCES food_spots (id) ON DELETE SET NULL
+    )
+  ''');
+
 
     // BUDGET table
     await db.execute('''
@@ -99,6 +105,11 @@ class DatabaseHelper {
     // Seed food spots from food_data.dart
     for (final spot in sampleSpots) {
       await db.insert('food_spots', spot.toMap());
+    }
+
+    //seed reviews from review_data.dart
+    for (final review in sampleReviews) {
+      await db.insert('reviews', review.toMap());
     }
   }
 
