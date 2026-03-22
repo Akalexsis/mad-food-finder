@@ -5,17 +5,19 @@
 
 class MealModel {
   final int? id;
-  final String name;
+  final String name; // Keep this for custom entries
   final double cost;
   final String desc;
   final String date;
+  final int? foodSpotId; //  Links to food_spots table
 
   const MealModel({
     this.id,
     required this.name,
     required this.cost,
     required this.desc,
-    required this.date
+    required this.date,
+    this.foodSpotId, // Can be null for custom entries
   });
 
   // map object fields to columns for database use
@@ -25,18 +27,20 @@ class MealModel {
       'name': name,
       'cost': cost,
       'desc': desc,
-      'date': date
+      'date': date,
+      'foodSpotId': foodSpotId, // Add to database
     };
   }
 
   // map database records to dart object for code use
-  factory MealModel.fromMap(Map<String, dynamic> map){
+  factory MealModel.fromMap(Map map){
     return MealModel(
-    id : map['id'],
-    name : map['name'],
-    cost: map['cost'],
-    desc : map['desc'],
-    date : map['date']
+      id : map['id'],
+      name : map['name'],
+      cost: map['cost'],
+      desc : map['desc'],
+      date : map['date'],
+      foodSpotId: map['foodSpotId'], // Read from database
     );
   }
 
@@ -46,14 +50,16 @@ class MealModel {
     String? name,
     double? cost,
     String? desc,
-    String? date
+    String? date,
+    int? foodSpotId,
   }) {
     return MealModel(
       id : id ?? this.id,
       name : name ?? this.name,
       cost: cost ?? this.cost,
       desc : desc ?? this.desc,
-      date : date ?? this.date
+      date : date ?? this.date,
+      foodSpotId: foodSpotId ?? this.foodSpotId,
     );
   }
 }
