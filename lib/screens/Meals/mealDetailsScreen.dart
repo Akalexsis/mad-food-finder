@@ -15,7 +15,6 @@ class MealDetailScreen extends StatefulWidget {
 }
 
 
-// TO-DO - refactor code to accept database objects
 class _MealDetailScreenState extends State<MealDetailScreen> {
   // store info of corresponding food log with related reviews
   late final MealModel log;
