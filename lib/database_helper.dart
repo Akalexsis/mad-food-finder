@@ -92,6 +92,7 @@ class DatabaseHelper {
     )
   ''');
 
+  //added food spot
 
     // BUDGET table
     await db.execute('''
@@ -318,6 +319,113 @@ class DatabaseHelper {
     } catch (e) {
       return null;
     }
+  }
+
+  // SPENDING ANALYTICS BY FOOD SPOT
+
+  // Get total spending for a specific food spot this month
+  Future<double> getSpendingByFoodSpot(int foodSpotId) async {
+    final meals = await getMealsThisMonth();
+    final foodSpotMeals = meals.where((meal) => meal.foodSpotId == foodSpotId);
+    return foodSpotMeals.fold<double>(0.0, (sum, meal) => sum + meal.cost);
+  }
+
+  // Get most visited food spot this month
+  Future<Map<String, dynamic>?> getMostVisitedSpot() async {
+    final meals = await getMealsThisMonth();
+
+    if (meals.isEmpty) return null;
+
+    // Count visits per food spot
+    Map<int, int> visitCounts = {};
+    for (var meal in meals) {
+      if (meal.foodSpotId != null) {
+        visitCounts[meal.foodSpotId!] =
+            (visitCounts[meal.foodSpotId!] ?? 0) + 1;
+      }
+    }
+
+    if (visitCounts.isEmpty) return null;
+
+    // Find food spot with most visits
+    int mostVisitedId = visitCounts.entries
+        .reduce((a, b) => a.value > b.value ? a : b)
+        .key;
+
+    int visitCount = visitCounts[mostVisitedId]!;
+    final foodSpot = await getFoodSpotsById(mostVisitedId);
+
+    if (foodSpot == null) return null;
+
+    return {'foodSpot': foodSpot, 'visits': visitCount};
+  }
+
+  // Get food spot where most money was spent this month
+  Future<Map<String, dynamic>?> getMostExpensiveSpot() async {
+    final meals = await getMealsThisMonth();
+
+    if (meals.isEmpty) return null;
+
+    // Sum spending per food spot
+    Map<int, double> spendingBySpot = {};
+    for (var meal in meals) {
+      if (meal.foodSpotId != null) {
+        spendingBySpot[meal.foodSpotId!] =
+            (spendingBySpot[meal.foodSpotId!] ?? 0.0) + meal.cost;
+      }
+    }
+
+    if (spendingBySpot.isEmpty) return null;
+
+    // Find food spot with highest spending
+    int topSpotId = spendingBySpot.entries
+        .reduce((a, b) => a.value > b.value ? a : b)
+        .key;
+
+    double totalSpent = spendingBySpot[topSpotId]!;
+    final foodSpot = await getFoodSpotsById(topSpotId);
+
+    if (foodSpot == null) return null;
+
+    return {'foodSpot': foodSpot, 'totalSpent': totalSpent};
+  }
+
+  // Get spending breakdown by all food spots this month
+  Future<Map<String, double>> getSpendingBreakdown() async {
+    final meals = await getMealsThisMonth();
+
+    Map<String, double> breakdown = {};
+
+    for (var meal in meals) {
+      if (meal.foodSpotId != null) {
+        final foodSpot = await getFoodSpotsById(meal.foodSpotId!);
+        if (foodSpot != null) {
+          breakdown[foodSpot.name] =
+              (breakdown[foodSpot.name] ?? 0.0) + meal.cost;
+        }
+      } else {
+        // Handle meals without linked food spot
+        breakdown['Other'] = (breakdown['Other'] ?? 0.0) + meal.cost;
+      }
+    }
+
+    return breakdown;
+  }
+
+  // Get average spending per visit for a food spot
+  Future<double> getAverageSpendingPerVisit(int foodSpotId) async {
+    final meals = await getAllMeals();
+    final foodSpotMeals = meals
+        .where((meal) => meal.foodSpotId == foodSpotId)
+        .toList();
+
+    if (foodSpotMeals.isEmpty) return 0.0;
+
+    double totalSpent = foodSpotMeals.fold<double>(
+      0.0,
+      (sum, meal) => sum + meal.cost,
+    );
+    return totalSpent / foodSpotMeals.length;
   }
 
   // BUDGET OPERATIONS
