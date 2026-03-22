@@ -92,7 +92,7 @@ class DatabaseHelper {
     )
   ''');
 
-  //added food spot
+    //added food spot
 
     // BUDGET table
     await db.execute('''
@@ -171,11 +171,7 @@ class DatabaseHelper {
 
   Future<int> deleteFoodSpot(int id) async {
     final db = await instance.database;
-    return await db.delete(
-      'food_spots',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('food_spots', where: 'id = ?', whereArgs: [id]);
   }
 
   // REVIEW OPERATIONS
@@ -202,11 +198,7 @@ class DatabaseHelper {
 
   Future<Review?> getReviewById(int id) async {
     final db = await instance.database;
-    final result = await db.query(
-      'reviews',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    final result = await db.query('reviews', where: 'id = ?', whereArgs: [id]);
     if (result.isNotEmpty) {
       return Review.fromMap(result.first);
     }
@@ -231,11 +223,7 @@ class DatabaseHelper {
 
   Future<int> deleteMeal(int id) async {
     final db = await instance.database;
-    return await db.delete(
-      'meals',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('meals', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<List<MealModel>> getAllMeals() async {
@@ -306,9 +294,18 @@ class DatabaseHelper {
   DateTime? _parseDateString(String date) {
     try {
       const months = {
-        'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4,
-        'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8,
-        'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12
+        'Jan': 1,
+        'Feb': 2,
+        'Mar': 3,
+        'Apr': 4,
+        'May': 5,
+        'Jun': 6,
+        'Jul': 7,
+        'Aug': 8,
+        'Sep': 9,
+        'Oct': 10,
+        'Nov': 11,
+        'Dec': 12,
       };
       final parts = date.replaceAll(',', '').split(' ');
       final month = months[parts[0]];
