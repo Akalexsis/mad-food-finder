@@ -3,7 +3,7 @@ import 'screens/Meals/mealScreen.dart';
 import 'screens/Home/foodScreen.dart';
 import 'screens/Budget/BudgetScreen.dart';
 import 'screens/Profile/profileScreen.dart';
-import 'screens/Profile/questionnaire_screen.dart';
+import 'screens/Profile/questionnaireScreen.dart';
 import '/shared_preferences_helper.dart';
 
 void main() {
