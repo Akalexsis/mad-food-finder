@@ -8,31 +8,57 @@ import '/shared_preferences_helper.dart';
 import '/screens/Profile/questionnaireScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final Function(bool)? onThemeToggle;
+  
+  const ProfileScreen({super.key, this.onThemeToggle});
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveClientMixin {
   Map<String, dynamic> _answers = {};
   bool _isLoading = true;
+  bool _isDarkMode = false;
+
+  // ← ADDED: Keep state alive when switching tabs
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
     _loadAnswers();
+    _loadDarkMode();
+  }
+
+  // ← ADDED: Listen for when screen becomes visible again
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reload dark mode setting whenever we switch to this tab
+    _loadDarkMode();
   }
 
   Future<void> _loadAnswers() async {
     final answers = await SharedPreferencesHelper.loadAllAnswers();
+    
+    if (!mounted) return;
+    
     setState(() {
       _answers = answers;
       _isLoading = false;
     });
   }
 
-  // Navigate to questionnaire and reload answers when returning
+  Future<void> _loadDarkMode() async {
+    final isDark = await SharedPreferencesHelper.getDarkMode();
+    if (!mounted) return;
+    setState(() {
+      _isDarkMode = isDark;
+    });
+  }
+
   Future<void> _openQuestionnaire() async {
     await Navigator.push(
       context,
@@ -40,7 +66,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         builder: (context) => const QuestionnaireScreen(fromProfile: true),
       ),
     );
-    // Reload after user potentially updates answers
+   
+    if (!mounted) return;
+    
     _loadAnswers();
   }
 
@@ -75,7 +103,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Chip row for list-type answers
   Widget _buildChips(List<String> items) {
     if (items.isEmpty) {
       return const Text('Not set', style: TextStyle(color: Colors.blueGrey));
@@ -93,10 +120,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Single-value answer row
   Widget _buildValue(String value) {
     return Text(
-      value.isEmpty ? 'Not set' : value,
+      value.isEmpty ? 'Not set' : '\$$value/month',
       style: TextStyle(
         fontSize: 14,
         color: value.isEmpty ? Colors.blueGrey : Colors.black87,
@@ -106,6 +132,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // ← ADDED: Required for AutomaticKeepAliveClientMixin
+    
     if (_isLoading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator(color: Colors.green)),
@@ -116,10 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final List<String> dietary        = List<String>.from(_answers['dietaryRestrictions'] ?? []);
     final List<String> allergies      = List<String>.from(_answers['allergies'] ?? []);
     final String budget               = _answers['monthlyBudget'] ?? '';
-    final String frequency            = _answers['mealFrequency'] ?? '';
-    final String schedule             = _answers['classSchedule'] ?? '';
     final List<String> busiestDays    = List<String>.from(_answers['busiestDays'] ?? []);
-    final String goal                 = _answers['diningGoal'] ?? '';
 
     return Scaffold(
       appBar: AppBar(
@@ -154,6 +179,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
 
             const SizedBox(height: 8),
+
+            // ── App Settings (Dark Mode) ─────────────────────────────────
+            Card(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: SwitchListTile(
+                secondary: Icon(
+                  _isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                  color: Colors.green,
+                ),
+                title: const Text('Dark Mode',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                subtitle: const Text('Switch between light and dark themes',
+                    style: TextStyle(fontSize: 13)),
+                value: _isDarkMode,
+                activeColor: Colors.green,
+                onChanged: (bool value) async {
+                  // ← UPDATED: Immediately update local state
+                  setState(() {
+                    _isDarkMode = value;
+                  });
+                  
+                  // Save to SharedPreferences
+                  await SharedPreferencesHelper.saveDarkMode(value);
+                  
+                  // Notify parent to change theme
+                  widget.onThemeToggle?.call(value);
+                  
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          value ? 'Dark mode enabled' : 'Light mode enabled',
+                        ),
+                        duration: const Duration(seconds: 1),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
 
             // ── Food Preferences ─────────────────────────────────────────
             _buildSection(
@@ -190,7 +257,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
-                              'Food Finder will flag spots that may contain your allergens.',
+                              'Food Finder will hide spots that may contain your allergens.',
                               style: TextStyle(
                                   fontSize: 12, color: Colors.orange.shade800),
                             ),
@@ -203,7 +270,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
 
-            // ── Budget & Habits ──────────────────────────────────────────
+            // ── Budget & Schedule ────────────────────────────────────────
             _buildSection(
               icon: Icons.attach_money_rounded,
               title: 'Monthly Food Budget',
@@ -211,29 +278,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
 
             _buildSection(
-              icon: Icons.repeat,
-              title: 'How Often I Eat Out',
-              child: _buildValue(frequency),
-            ),
-
-            // ── Schedule ────────────────────────────────────────────────
-            _buildSection(
-              icon: Icons.school,
-              title: 'Class Schedule',
-              child: _buildValue(schedule),
-            ),
-
-            _buildSection(
               icon: Icons.calendar_today,
               title: 'Busiest Days',
-              child: _buildChips(busiestDays),
-            ),
-
-            // ── Goal ─────────────────────────────────────────────────────
-            _buildSection(
-              icon: Icons.flag_rounded,
-              title: 'My Dining Goal',
-              child: _buildValue(goal),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'We\'ll suggest quick meal options on these days',
+                    style: TextStyle(fontSize: 12, color: Colors.blueGrey),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildChips(busiestDays),
+                ],
+              ),
             ),
 
             // ── Edit button ──────────────────────────────────────────────
