@@ -3,11 +3,10 @@
   Purpose - Render all meal logs
  */
 import 'package:flutter/material.dart';
-import 'package:mad_food_finder/database_helper.dart';
-import '../../models/meal_model.dart';
-import '../../data/meal_data.dart'; // FOR TESTING ONLY
-import 'addLogScreen.dart';
-import '../../ui/mealLogUi.dart';
+import '/models/meal_model.dart';
+import '/database_helper.dart';
+import '../Meals/addLogScreen.dart';
+import '/ui/mealLogUi.dart';
 
 class MealScreen extends StatefulWidget {
   const MealScreen({super.key});
