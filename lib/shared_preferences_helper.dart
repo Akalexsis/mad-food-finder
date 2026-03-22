@@ -5,16 +5,14 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
-  // Keys for all questionnaire answers
+  // Keys for questionnaire answers
   static const String keyHasCompletedQuestionnaire = 'has_completed_questionnaire';
-  static const String keyCuisinePreferences = 'cuisine_preferences';     // List<String>
-  static const String keyDietaryRestrictions = 'dietary_restrictions';   //     |
-  static const String keyAllergies = 'allergies';                        //    ...
-  static const String keyMonthlyBudget = 'monthly_budget';               // String (e.g. "100.52")
-  static const String keyMealFrequency = 'meal_frequency';               
-  static const String keyClassSchedule = 'class_schedule';               // String (e.g. "MWF", "TTh")
-  static const String keyBusiestDays = 'busiest_days';                   
-  static const String keyDiningGoal = 'dining_goal';                     
+  static const String keyCuisinePreferences = 'cuisine_preferences';
+  static const String keyDietaryRestrictions = 'dietary_restrictions';
+  static const String keyAllergies = 'allergies';
+  static const String keyMonthlyBudget = 'monthly_budget';
+  static const String keyBusiestDays = 'busiest_days';
+  static const String keyDarkMode = 'dark_mode';
 
   // ─── COMPLETED FLAG ───────────────────────────────────────────────────────
 
@@ -76,30 +74,6 @@ class SharedPreferencesHelper {
     return prefs.getString(keyMonthlyBudget) ?? 'Not set';
   }
 
-  // ─── MEAL FREQUENCY ──────────────────────────────────────────────────────
-
-  static Future<void> saveMealFrequency(String frequency) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(keyMealFrequency, frequency);
-  }
-
-  static Future<String> getMealFrequency() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(keyMealFrequency) ?? 'Not set';
-  }
-
-  // ─── CLASS SCHEDULE ──────────────────────────────────────────────────────
-
-  static Future<void> saveClassSchedule(String schedule) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(keyClassSchedule, schedule);
-  }
-
-  static Future<String> getClassSchedule() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(keyClassSchedule) ?? 'Not set';
-  }
-
   // ─── BUSIEST DAYS ────────────────────────────────────────────────────────
 
   static Future<void> saveBusiestDays(List<String> days) async {
@@ -112,16 +86,16 @@ class SharedPreferencesHelper {
     return prefs.getStringList(keyBusiestDays) ?? [];
   }
 
-  // ─── DINING GOAL ─────────────────────────────────────────────────────────
+  // ─── DARK MODE ───────────────────────────────────────────────────────────
 
-  static Future<void> saveDiningGoal(String goal) async {
+  static Future<void> saveDarkMode(bool isDark) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(keyDiningGoal, goal);
+    await prefs.setBool(keyDarkMode, isDark);
   }
 
-  static Future<String> getDiningGoal() async {
+  static Future<bool> getDarkMode() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(keyDiningGoal) ?? 'Not set';
+    return prefs.getBool(keyDarkMode) ?? false;
   }
 
   // ─── SAVE ALL AT ONCE ────────────────────────────────────────────────────
@@ -131,19 +105,13 @@ class SharedPreferencesHelper {
     required List<String> dietaryRestrictions,
     required List<String> allergies,
     required String monthlyBudget,
-    required String mealFrequency,
-    required String classSchedule,
     required List<String> busiestDays,
-    required String diningGoal,
   }) async {
     await saveCuisinePreferences(cuisines);
     await saveDietaryRestrictions(dietaryRestrictions);
     await saveAllergies(allergies);
     await saveMonthlyBudget(monthlyBudget);
-    await saveMealFrequency(mealFrequency);
-    await saveClassSchedule(classSchedule);
     await saveBusiestDays(busiestDays);
-    await saveDiningGoal(diningGoal);
     await setQuestionnnaireCompleted();
   }
 
@@ -155,10 +123,7 @@ class SharedPreferencesHelper {
       'dietaryRestrictions': await getDietaryRestrictions(),
       'allergies': await getAllergies(),
       'monthlyBudget': await getMonthlyBudget(),
-      'mealFrequency': await getMealFrequency(),
-      'classSchedule': await getClassSchedule(),
       'busiestDays': await getBusiestDays(),
-      'diningGoal': await getDiningGoal(),
     };
   }
 
