@@ -72,3 +72,8 @@ Review Table
 ## Future Enhancements
 1. Include AI chatbot to help users search for specific restaurants faster
 2. Update add/ edit restaurant information so users can only edit posts they've created
+3. Add a search bar for users to search for restaurants by name.
+4. Add a filter to meal log to view logs by date, time frame (i.e month, year, etc.), amount spent, resturant, etc.
+5. Add summary section to meal log tab so that users can view information about their eating habits at a glance.
+6. Add chart to budget screen so that users can visualize their spending habits by month, year, and all time (from their first log to the present).
+
