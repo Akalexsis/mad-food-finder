@@ -1,10 +1,11 @@
 /* 
   Author - Kayla Thornton
-  Purpose - Render details about food spots
+  Purpose - Render details about food spots with their specific reviews
 */
 import 'package:flutter/material.dart';
 import '../../models/food_model.dart';
 import '../../models/review_model.dart';
+import '../../database_helper.dart';
 import 'reviewScreen.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -16,30 +17,43 @@ class DetailScreen extends StatefulWidget {
   _DetailScreenState createState() => _DetailScreenState();
 }
 
-
-// TO-DO - refactor code to accept database objects
 class _DetailScreenState extends State<DetailScreen> {
   // store info of corresponding food spot with related reviews
-  late final FoodSpot spot;
-  List<Review> reviews = [ // FOR TESTING ONLY DELETE WHEN DATABASE INITIALIZED
-    Review(
-      name: 'Kayla', 
-      desc: 'This place is great!', 
-      date: 'Mar 16, 2026'
-    ),
-    Review(
-      name: 'Zah', 
-      desc: 'Do not listen to Kayla. This place sucks!', 
-      date: 'Mar 17, 2026'
-    ),
-  ];
-
+  late FoodSpot spot;  // ← CHANGED: Remove 'final' so we can update it
+  List<Review> reviews = [];
+  bool isLoading = true;
 
   // initialize food spot data
   @override
   void initState() {
     super.initState();
     spot = widget.spot;
+    loadReviews();
+  }
+
+  // get reviews from database for THIS specific food spot
+  Future<void> loadReviews() async {
+    setState(() => isLoading = true);
+    
+    try {
+      final loadedReviews = await DatabaseHelper.instance.getReviewsForFoodSpot(spot.id!);
+      
+      //  MOUNTED CHECK: Only update state if widget is still mounted
+      if (!mounted) return;
+      
+      setState(() {
+        reviews = loadedReviews;
+        isLoading = false;
+      });
+    } catch (e) {
+      //  MOUNTED CHECK: Only update state if widget is still mounted
+      if (!mounted) return;
+      
+      setState(() => isLoading = false);
+      print('Error loading reviews: $e');
+    }
+  }
+
     // loadReviews();
   }
 
@@ -83,24 +97,26 @@ class _DetailScreenState extends State<DetailScreen> {
                child: Text('Add Review')
             ),
             
-            // conditionally render reviews
-            reviews.isEmpty ? Text('Add a review!') : 
-            
-            Expanded(
-              child: ListView.builder(
-                itemCount: reviews.length,
-                itemBuilder: (context, index) {
-                  final review = reviews[index];
+            // conditionally render reviews with loading state
+            isLoading 
+              ? const Expanded(child: Center(child: CircularProgressIndicator(color: Colors.green)))
+              : reviews.isEmpty 
+                ? const Expanded(child: Center(child: Text('No reviews yet. Be the first to review!')))
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: reviews.length,
+                      itemBuilder: (context, index) {
+                        final review = reviews[index];
 
-                  return ListTile(
+                        return ListTile(
                     leading: Icon(Icons.person),
                     title: Text(review.name, style: TextStyle( fontSize: 18 )),
                     subtitle: Text(review.desc, style: TextStyle( fontSize: 14, color: Colors.blueGrey )),
                     trailing: Text(review.date, style: TextStyle( fontSize: 12, color: Colors.blueGrey )),
-                  );
-                },
-              ),
-            ),            
+                        );
+                      },
+                    ),
+                  ),            
           ],
         )
       )
