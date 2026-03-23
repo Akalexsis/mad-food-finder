@@ -24,14 +24,14 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 1) {
+    if (oldVersion < 2) {
       await db.execute('''
         CREATE TABLE IF NOT EXISTS meals(
           id INTEGER PRIMARY KEY AUTOINCREMENT,
