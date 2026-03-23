@@ -4,15 +4,17 @@
 
 This project seeks to connect students with nearby food options while also allowing them to track their eating and spending habits. The app's main features include:
 - Dashboard displaying nearby reasturants. Users can filter options by price, cuisine type, and preferences.
-      - Add/ edit restaurant information
-      - View more details about a restaurant
-      - Add a restaurant review
+    - Add/ edit restaurant information
+    - View more details about a restaurant
+    - Add a restaurant review
 - Meal log where users can view meal history and add a new meal entry
 - Budget tracker that displays how much a user has spent on dining options for this current month
 - Profile page where users can view and set their preferences
 
 Team Contributions:
+
 Kayla - frontend developer
+
 Zahmad - backend developer
 
 ## User Guide
@@ -37,6 +39,36 @@ Follow these steps to run the app:
 5. Enjoy!
 
 ## Database Schema
+Food Table
+    int id
+    String name
+    String imageUrl
+    String hours
+    int cost
+    String cuisine
+    bool isFavorite
+    List<String> potentialAllergens
+    String menuUrl
+
+Meal Table
+    int id
+    String name
+    double cost
+    String desc
+    String date
+    int foodSpotId
+
+Review Table
+    int id
+    String name
+    String desc
+    String date
+    int foodId
+
+## Known Issues
+- Dark mode not working on Profile page unless toggle clicked on that page
+
 
 ## Future Enhancements
-
+1. Include AI chatbot to help users search for specific restaurants faster
+2. Update add/ edit restaurant information so users can only edit posts they've created
