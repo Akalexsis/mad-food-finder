@@ -40,29 +40,49 @@ Follow these steps to run the app:
 
 ## Database Schema
 Food Table
+    
     int id
+
     String name
+
     String imageUrl
+
     String hours
+
     int cost
+
     String cuisine
+
     bool isFavorite
+
     List<String> potentialAllergens
+
     String menuUrl
 
 Meal Table
+
     int id
+
     String name
+
     double cost
+
     String desc
+    
     String date
+
     int foodSpotId
 
 Review Table
+
     int id
+
     String name
+
     String desc
+
     String date
+    
     int foodId
 
 ## Known Issues
