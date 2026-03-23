@@ -4,6 +4,7 @@
  */
 import 'package:flutter/material.dart';
 import '../../models/meal_model.dart';
+import '../../models/food_model.dart';
 import '../../ui/mealLogUi.dart';
 import '../../database_helper.dart';
 import '/shared_preferences_helper.dart';
@@ -37,6 +38,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
     final spent = await DatabaseHelper.instance.getMonthlySpending();
     final logs = await DatabaseHelper.instance.getMealsThisMonth();
 
+    // MOUNTED CHECK: Only update state if widget is still mounted
+    if (!mounted) return;
+
     setState(() {
       monthlyBudget = parsedBudget;
       amountSpent = spent;
@@ -48,26 +52,32 @@ class _BudgetScreenState extends State<BudgetScreen> {
     });
   }
 
-  // Find restaurant where most money was spent this month
-  MealModel? _getMostSpent() {
+  // Find food spot where most money was spent this month (using foodSpotId)
+  Future<Map<String, dynamic>?> _getMostSpentFoodSpot() async {
     if (monthLogs.isEmpty) return null;
 
-    final spendingByName = <String, double>{};
+    // Group spending by foodSpotId
+    final spendingBySpotId = <int, double>{};
     for (final log in monthLogs) {
-      spendingByName[log.name] = (spendingByName[log.name] ?? 0.0) + log.cost;
+      if (log.foodSpotId != null) {
+        spendingBySpotId[log.foodSpotId!] =
+            (spendingBySpotId[log.foodSpotId!] ?? 0.0) + log.cost;
+      }
     }
 
-    final mostSpentName = spendingByName.entries
+    if (spendingBySpotId.isEmpty) return null;
+
+    // Find the food spot with highest spending
+    final topSpotId = spendingBySpotId.entries
         .reduce((a, b) => a.value >= b.value ? a : b)
         .key;
 
-    return monthLogs.firstWhere((log) => log.name == mostSpentName);
-  }
+    final totalSpent = spendingBySpotId[topSpotId]!;
+    final foodSpot = await DatabaseHelper.instance.getFoodSpotsById(topSpotId);
 
-  double _getTotalSpentAt(String name) {
-    return monthLogs
-        .where((log) => log.name == name)
-        .fold(0.0, (sum, log) => sum + log.cost);
+    if (foodSpot == null) return null;
+
+    return {'foodSpot': foodSpot, 'totalSpent': totalSpent};
   }
 
   @override
@@ -140,7 +150,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
               ),
             ),
 
-            // Spending summary card
+            // Spending summary card - NOW USING FOOD SPOT DATA
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -153,32 +163,55 @@ class _BudgetScreenState extends State<BudgetScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    Builder(
-                      builder: (context) {
-                        final mostSpent = _getMostSpent();
+                    FutureBuilder<Map<String, dynamic>?>(
+                      future: _getMostSpentFoodSpot(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
 
-                        if (mostSpent == null) {
+                        final data = snapshot.data;
+                        if (data == null) {
                           return const Text(
                             'No meals logged this month yet.',
                             style: TextStyle(color: Colors.blueGrey),
                           );
                         }
 
-                        final totalAtSpot = _getTotalSpentAt(mostSpent.name);
+                        final foodSpot = data['foodSpot'] as FoodSpot;
+                        final totalSpent = data['totalSpent'] as double;
 
                         return Row(
                           children: [
-                            Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.restaurant,
-                                color: Colors.blueGrey,
-                                size: 36,
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                foodSpot.imageUrl, // ← Actual restaurant logo!
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  // Fallback to icon if image fails to load
+                                  return Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade200,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Icon(
+                                      Icons.restaurant, // ← Generic icon
+                                      color: Colors.blueGrey,
+                                      size: 36,
+                                    ),
+                                  ); // Shows icon as backup
+                                },
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -193,14 +226,14 @@ class _BudgetScreenState extends State<BudgetScreen> {
                                   ),
                                 ),
                                 Text(
-                                  mostSpent.name,
+                                  foodSpot.name,
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 Text(
-                                  '\$${totalAtSpot.toStringAsFixed(2)} spent this month',
+                                  '\$${totalSpent.toStringAsFixed(2)} spent this month',
                                   style: const TextStyle(color: Colors.green),
                                 ),
                               ],
