@@ -14,53 +14,60 @@ final List<FoodSpot> sampleSpots = [
     cost: 10,
     cuisine: 'American',
     isFavorite: false,
+    menuUrl: 'https://www.mcdonalds.com/us/en-us/full-menu.html'
   ),
   FoodSpot(
     id: 2,
     name: 'Chick-fil-A',
-    imageUrl: 'https://1000logos.net/wp-content/uploads/2016/10/Chick-fil-A-Logo.png',
+    imageUrl: 'https://blogs.millersville.edu/news/files/2024/06/small-chick-fil-a.png',
     hours: '6:00am - 10:00pm',
     cost: 12,
     cuisine: 'American',
     isFavorite: false,
+    menuUrl: 'https://www.chick-fil-a.com/menu'
   ),
   FoodSpot(
     id: 3,
     name: 'Five Guys',
-    imageUrl: 'https://1000logos.net/wp-content/uploads/2020/05/Five-Guys-Logo.png',
+    imageUrl: 'https://static.wikia.nocookie.net/fastfoodfranchises/images/6/6e/Five_Guys_Logo.png/revision/latest?cb=20200511134253',
     hours: '11:00am - 10:00pm',
     cost: 18,
     cuisine: 'American',
     isFavorite: false,
+    menuUrl: 'https://www.fiveguys.com/menu/'
+
   ),
   FoodSpot(
     id: 4,
     name: 'Zaxby\'s',
-    imageUrl: 'https://1000logos.net/wp-content/uploads/2023/02/Zaxbys-Logo.png',
+    imageUrl: 'https://images.seeklogo.com/logo-png/15/1/zaxbys-logo-png_seeklogo-155814.png',
     hours: '10:30am - 10:00pm',
     cost: 13,
     cuisine: 'American',
     isFavorite: false,
+    menuUrl: 'https://www.zaxbys.com/menu'
   ),
   FoodSpot(
     id: 5,
     name: 'Wingstop',
-    imageUrl: 'https://1000logos.net/wp-content/uploads/2020/10/Wingstop-Logo.png',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2023/09/Wingstop-Logo-500x281.png',
     hours: '11:00am - 12:00am',
     cost: 16,
     cuisine: 'American',
     isFavorite: false,
+    menuUrl: 'https://www.wingstop.com/menu'
   ),
 
   // ── Italian ──
   FoodSpot(
     id: 6,
     name: 'Olive Garden',
-    imageUrl: 'https://1000logos.net/wp-content/uploads/2020/04/Olive-Garden-Logo.png',
+    imageUrl: 'https://cdn.freebiesupply.com/logos/large/2x/olive-garden-logo-png-transparent.png',
     hours: '11:00am - 10:00pm',
     cost: 20,
     cuisine: 'Italian',
     isFavorite: false,
+    menuUrl: 'https://www.olivegarden.com/menu/classic-entrees'
   ),
   FoodSpot(
     id: 7,
