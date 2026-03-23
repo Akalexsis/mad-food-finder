@@ -2,12 +2,98 @@
 
 ## Summary
 
-This project connects students with budget-friendly meal options. The app's main features include:
-- Dashboard displaying suggested food options
-- Chatroom where users can post options
-- Favorites page for users to view saved meal options
+This project seeks to connect students with nearby food options while also allowing them to track their eating and spending habits. The app's main features include:
+- Dashboard displaying nearby reasturants. Users can filter options by price, cuisine type, and preferences.
+    - Add/ edit restaurant information
+    - View more details about a restaurant
+    - Add a restaurant review
+- Meal log where users can view meal history and add a new meal entry
+- Budget tracker that displays how much a user has spent on dining options for this current month
+- Profile page where users can view and set their preferences
+
+Team Contributions:
+
+Kayla - frontend developer
+
+Zahmad - backend developer
 
 ## User Guide
 Here are instructions on how to navigate the app:
+- Home tab  - view all dining options and filter by favorited options, cuisine type, etc
+    - Click the 'add spot' button to add a new dining option
+    - Click any dining option to view more information about that restaurant, view reviews, or leave a review of your own
+- Meals tab - View meal history by week, month, and all past meals
+    - Click 'add meal' button to log a new meal
+    - Click and individual meal log to view more information about that meal
+- Budget tab - view your spending history
+- Profile tab - view and update preferences
+  - Click the 'Edit' button to edit profile details
+  - Click the 'Favorites' button to view a list of your favorited meals
 
 ## Setup
+Follow these steps to run the app:
+1. Ensure flutter is installed on your machine
+2. Open a new terminal
+3. Clone this repository by running 'git clone [url].git' and replace url with the link to this page
+4. Run 'flutter run'
+5. Enjoy!
+
+## Database Schema
+Food Table
+    
+    int id
+
+    String name
+
+    String imageUrl
+
+    String hours
+
+    int cost
+
+    String cuisine
+
+    bool isFavorite
+
+    List<String> potentialAllergens
+
+    String menuUrl
+
+Meal Table
+
+    int id
+
+    String name
+
+    double cost
+
+    String desc
+    
+    String date
+
+    int foodSpotId
+
+Review Table
+
+    int id
+
+    String name
+
+    String desc
+
+    String date
+    
+    int foodId
+
+## Known Issues
+- Dark mode not working on Profile page unless toggle clicked on that page
+
+
+## Future Enhancements
+1. Include AI chatbot to help users search for specific restaurants faster
+2. Update add/ edit restaurant information so users can only edit posts they've created
+3. Add a search bar for users to search for restaurants by name.
+4. Add a filter to meal log to view logs by date, time frame (i.e month, year, etc.), amount spent, resturant, etc.
+5. Add summary section to meal log tab so that users can view information about their eating habits at a glance.
+6. Add chart to budget screen so that users can visualize their spending habits by month, year, and all time (from their first log to the present).
+
