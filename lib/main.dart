@@ -95,21 +95,6 @@ class MainApp extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('GSU Budget Bites'),
-          actions: [
-            // Add theme toggle button in app bar
-            FutureBuilder<bool>(
-              future: SharedPreferencesHelper.getDarkMode(),
-              builder: (context, snapshot) {
-                final isDark = snapshot.data ?? false;
-                return IconButton(
-                  icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-                  onPressed: () {
-                    onThemeToggle(!isDark);
-                  },
-                );
-              },
-            ),
-          ],
           bottom: const TabBar(
             tabs: [
               Tab(icon: Icon(Icons.food_bank), text: 'Eateries'),
