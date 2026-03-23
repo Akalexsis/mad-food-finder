@@ -3,10 +3,17 @@
 ## Summary
 
 This project seeks to connect students with nearby food options while also allowing them to track their eating and spending habits. The app's main features include:
-- Dashboard displaying snearby reasturants
+- Dashboard displaying nearby reasturants. Users can filter options by price, cuisine type, and preferences.
+      - Add/ edit restaurant information
+      - View more details about a restaurant
+      - Add a restaurant review
 - Meal log where users can view meal history and add a new meal entry
 - Budget tracker that displays how much a user has spent on dining options for this current month
-- Profile page where users can view and set their preferences 
+- Profile page where users can view and set their preferences
+
+Team Contributions:
+Kayla - frontend developer
+Zahmad - backend developer
 
 ## User Guide
 Here are instructions on how to navigate the app:
@@ -28,3 +35,8 @@ Follow these steps to run the app:
 3. Clone this repository by running 'git clone [url].git' and replace url with the link to this page
 4. Run 'flutter run'
 5. Enjoy!
+
+## Database Schema
+
+## Future Enhancements
+
