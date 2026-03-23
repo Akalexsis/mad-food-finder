@@ -1,0 +1,302 @@
+/*
+  Author - Kayla Thornton
+  Purpose - Use sample food spots to test UI functionality (will replace with SQL queries)
+ */
+import '../models/food_model.dart';
+
+final List<FoodSpot> sampleSpots = [
+  // ── American ──
+  FoodSpot(
+    id: 1,
+    name: 'McDonalds',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2017/03/McDonalds-logo.png',
+    hours: '6:00am - 12:00am',
+    cost: 10,
+    cuisine: 'American',
+    isFavorite: false,
+    menuUrl: 'https://www.mcdonalds.com/us/en-us/full-menu.html'
+  ),
+  FoodSpot(
+    id: 2,
+    name: 'Chick-fil-A',
+    imageUrl: 'https://blogs.millersville.edu/news/files/2024/06/small-chick-fil-a.png',
+    hours: '6:00am - 10:00pm',
+    cost: 12,
+    cuisine: 'American',
+    isFavorite: false,
+    menuUrl: 'https://www.chick-fil-a.com/menu'
+  ),
+  FoodSpot(
+    id: 3,
+    name: 'Five Guys',
+    imageUrl: 'https://static.wikia.nocookie.net/fastfoodfranchises/images/6/6e/Five_Guys_Logo.png/revision/latest?cb=20200511134253',
+    hours: '11:00am - 10:00pm',
+    cost: 18,
+    cuisine: 'American',
+    isFavorite: false,
+    menuUrl: 'https://www.fiveguys.com/menu/'
+
+  ),
+  FoodSpot(
+    id: 4,
+    name: 'Zaxby\'s',
+    imageUrl: 'https://images.seeklogo.com/logo-png/15/1/zaxbys-logo-png_seeklogo-155814.png',
+    hours: '10:30am - 10:00pm',
+    cost: 13,
+    cuisine: 'American',
+    isFavorite: false,
+    menuUrl: 'https://www.zaxbys.com/menu'
+  ),
+  FoodSpot(
+    id: 5,
+    name: 'Wingstop',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2023/09/Wingstop-Logo-500x281.png',
+    hours: '11:00am - 12:00am',
+    cost: 16,
+    cuisine: 'American',
+    isFavorite: false,
+    menuUrl: 'https://www.wingstop.com/menu'
+  ),
+
+  // ── Italian ──
+  FoodSpot(
+    id: 6,
+    name: 'Olive Garden',
+    imageUrl: 'https://cdn.freebiesupply.com/logos/large/2x/olive-garden-logo-png-transparent.png',
+    hours: '11:00am - 10:00pm',
+    cost: 20,
+    cuisine: 'Italian',
+    isFavorite: false,
+    menuUrl: 'https://www.olivegarden.com/menu/classic-entrees'
+  ),
+  FoodSpot(
+    id: 7,
+    name: 'Carrabba\'s Italian Grill',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Carrabbas_Logo.svg/1200px-Carrabbas_Logo.svg.png',
+    hours: '11:00am - 10:00pm',
+    cost: 22,
+    cuisine: 'Italian',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 8,
+    name: 'Fazoli\'s',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2021/09/Fazolis-Logo.png',
+    hours: '10:30am - 9:00pm',
+    cost: 12,
+    cuisine: 'Italian',
+    isFavorite: false,
+  ),
+
+  // ── Mexican ──
+  FoodSpot(
+    id: 9,
+    name: 'Chipotle',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2017/05/Chipotle-logo.png',
+    hours: '10:45am - 10:00pm',
+    cost: 14,
+    cuisine: 'Mexican',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 10,
+    name: 'Taco Bell',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2017/06/Taco-Bell-Logo.png',
+    hours: '7:00am - 2:00am',
+    cost: 9,
+    cuisine: 'Mexican',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 11,
+    name: 'Moe\'s Southwest Grill',
+    imageUrl: 'https://static.wikia.nocookie.net/logopedia/images/0/05/Moes_Sothwest_Grill_logo.png/revision/latest?cb=20200624013335',
+    hours: '10:30am - 9:00pm',
+    cost: 13,
+    cuisine: 'Mexican',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 12,
+    name: 'Qdoba',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2021/04/Qdoba-Logo.png',
+    hours: '10:00am - 10:00pm',
+    cost: 13,
+    cuisine: 'Mexican',
+    isFavorite: false,
+  ),
+
+  // ── Asian ──
+  FoodSpot(
+    id: 13,
+    name: 'Panda Express',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2020/05/Panda-Express-Logo.png',
+    hours: '10:00am - 10:00pm',
+    cost: 11,
+    cuisine: 'Asian',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 14,
+    name: 'Teriyaki Madness',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2022/01/Teriyaki-Madness-Logo.png',
+    hours: '11:00am - 9:00pm',
+    cost: 13,
+    cuisine: 'Asian',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 15,
+    name: 'Ginger Kitchen',
+    imageUrl: 'https://via.placeholder.com/150x150.png?text=Ginger+Kitchen',
+    hours: '11:00am - 9:30pm',
+    cost: 15,
+    cuisine: 'Asian',
+    isFavorite: false,
+  ),
+
+  // ── Mediterranean ──
+  FoodSpot(
+    id: 16,
+    name: 'Zoes Kitchen',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2021/04/Zoes-Kitchen-Logo.png',
+    hours: '11:00am - 9:00pm',
+    cost: 14,
+    cuisine: 'Mediterranean',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 17,
+    name: 'Cava',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2023/01/Cava-Logo.png',
+    hours: '10:45am - 10:00pm',
+    cost: 14,
+    cuisine: 'Mediterranean',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 18,
+    name: 'Gyro Wrap',
+    imageUrl: 'https://via.placeholder.com/150x150.png?text=Gyro+Wrap',
+    hours: '11:00am - 8:00pm',
+    cost: 12,
+    cuisine: 'Mediterranean',
+    isFavorite: false,
+  ),
+
+  // ── Fast Food ──
+  FoodSpot(
+    id: 19,
+    name: 'Wendy\'s',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2017/06/Wendys-Logo.png',
+    hours: '6:30am - 1:00am',
+    cost: 10,
+    cuisine: 'Fast Food',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 20,
+    name: 'Burger King',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2016/10/Burger-King-Logo.png',
+    hours: '6:00am - 12:00am',
+    cost: 10,
+    cuisine: 'Fast Food',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 21,
+    name: 'Popeyes',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2020/07/Popeyes-Logo.png',
+    hours: '10:00am - 10:00pm',
+    cost: 12,
+    cuisine: 'Fast Food',
+    isFavorite: false,
+  ),
+
+  // ── Seafood ──
+  FoodSpot(
+    id: 22,
+    name: 'Red Lobster',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2021/04/Red-Lobster-Logo.png',
+    hours: '11:00am - 10:00pm',
+    cost: 30,
+    cuisine: 'Seafood',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 23,
+    name: 'Captain D\'s',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2021/07/Captain-Ds-Logo.png',
+    hours: '10:30am - 10:00pm',
+    cost: 12,
+    cuisine: 'Seafood',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 24,
+    name: 'Long John Silver\'s',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2021/04/Long-John-Silvers-Logo.png',
+    hours: '10:30am - 10:00pm',
+    cost: 10,
+    cuisine: 'Seafood',
+    isFavorite: false,
+  ),
+
+  // ── Vegan / Plant-based ──
+  FoodSpot(
+    id: 25,
+    name: 'Veggie Grill',
+    imageUrl: 'https://via.placeholder.com/150x150.png?text=Veggie+Grill',
+    hours: '11:00am - 9:00pm',
+    cost: 14,
+    cuisine: 'Vegan / Plant-based',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 26,
+    name: 'Native Foods',
+    imageUrl: 'https://via.placeholder.com/150x150.png?text=Native+Foods',
+    hours: '11:00am - 9:00pm',
+    cost: 15,
+    cuisine: 'Vegan / Plant-based',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 27,
+    name: 'Loving Hut',
+    imageUrl: 'https://via.placeholder.com/150x150.png?text=Loving+Hut',
+    hours: '11:00am - 8:30pm',
+    cost: 13,
+    cuisine: 'Vegan / Plant-based',
+    isFavorite: false,
+  ),
+
+  // ── Cafe ──
+  FoodSpot(
+    id: 28,
+    name: 'Starbucks',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2016/10/Starbucks-Logo.png',
+    hours: '5:00am - 9:00pm',
+    cost: 8,
+    cuisine: 'Cafe',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 29,
+    name: 'Panera Bread',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2016/11/Panera-Bread-Logo.png',
+    hours: '6:00am - 9:00pm',
+    cost: 14,
+    cuisine: 'Cafe',
+    isFavorite: false,
+  ),
+  FoodSpot(
+    id: 30,
+    name: 'Dunkin\'',
+    imageUrl: 'https://1000logos.net/wp-content/uploads/2017/06/Dunkin-Donuts-Logo.png',
+    hours: '5:00am - 8:00pm',
+    cost: 7,
+    cuisine: 'Cafe',
+    isFavorite: false,
+  ),
+];

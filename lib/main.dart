@@ -1,122 +1,153 @@
 import 'package:flutter/material.dart';
+import 'screens/Meals/mealScreen.dart';
+import 'screens/Home/foodScreen.dart';
+import 'screens/Budget/BudgetScreen.dart';
+import 'screens/Profile/profileScreen.dart';
+import 'screens/Profile/questionnaireScreen.dart';
+import '/shared_preferences_helper.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const FoodFinderApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class FoodFinderApp extends StatefulWidget {
+  const FoodFinderApp({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+  State<FoodFinderApp> createState() => _FoodFinderAppState();
+}
+
+class _FoodFinderAppState extends State<FoodFinderApp> {
+  ThemeMode _themeMode = ThemeMode.light;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadThemePreference();
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
+  Future<void> _loadThemePreference() async {
+    final isDark = await SharedPreferencesHelper.getDarkMode();
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    });
+  }
+
+  void _toggleTheme(bool isDark) async {
+    await SharedPreferencesHelper.saveDarkMode(isDark);
+    setState(() {
+      _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+    return MaterialApp(
+      title: 'GSU Budget Bites',
+      debugShowCheckedModeBanner: false,
+      themeMode: _themeMode,
+      
+      // Light theme
+      theme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.light,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.green,
+          brightness: Brightness.light,
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+        ),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
+      
+      // Dark theme
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.green,
+          brightness: Brightness.dark,
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.green[800],  // ← Darker green for dark mode
+          foregroundColor: Colors.white,
+        ),
+      ),
+      
+      routes: {
+        '/home': (context) => MainApp(onThemeToggle: _toggleTheme),
+      },
+      home: _LaunchController(onThemeToggle: _toggleTheme),
+    );
+  }
+}
+
+class MainApp extends StatelessWidget {
+  final Function(bool) onThemeToggle;
+  
+  const MainApp({super.key, required this.onThemeToggle});
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('GSU Budget Bites'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.food_bank), text: 'Eateries'),
+              Tab(icon: Icon(Icons.lunch_dining_outlined), text: 'Meal Log'),
+              Tab(icon: Icon(Icons.attach_money_rounded), text: 'Budget'),
+              Tab(icon: Icon(Icons.account_circle_rounded), text: 'Profile'),
+            ],
+          ),
+        ),
+        body: TabBarView(
           children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            FoodScreen(),
+            MealScreen(),
+            BudgetScreen(),
+            ProfileScreen(onThemeToggle: onThemeToggle),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+    );
+  }
+}
+
+class _LaunchController extends StatefulWidget {
+  final Function(bool) onThemeToggle;
+  
+  const _LaunchController({required this.onThemeToggle});
+
+  @override
+  _LaunchControllerState createState() => _LaunchControllerState();
+}
+
+class _LaunchControllerState extends State<_LaunchController> {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: SharedPreferencesHelper.hasCompletedQuestionnaire(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(color: Colors.green),
+            ),
+          );
+        }
+
+        final hasCompleted = snapshot.data!;
+
+        if (!hasCompleted) {
+          return const QuestionnaireScreen(fromProfile: false);
+        }
+
+        return MainApp(onThemeToggle: widget.onThemeToggle);
+      },
     );
   }
 }
