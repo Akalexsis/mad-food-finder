@@ -85,9 +85,6 @@ Review Table
     
     int foodId
 
-## Known Issues
-- Dark mode not working on Profile page unless toggle clicked on that page
-
 
 ## Future Enhancements
 1. Include AI chatbot to help users search for specific restaurants faster
